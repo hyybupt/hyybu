@@ -186,7 +186,7 @@ async function sendMessage(text) {
     scrollToBottom();
 
     try {
-        const response = await fetch('/.netlify/functions/chat', {
+        const response = await fetch('https://boisterous-belekoy-434bfa.netlify.app/.netlify/functions/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ messages, userContext: getUserContext() })
