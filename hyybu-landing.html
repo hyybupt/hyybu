@@ -1,0 +1,1244 @@
+<!DOCTYPE html><html lang="pt"><head>
+
+
+
+
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hubbu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent:   #1E6B8C;
+            --accent-l: #3A98BD;
+            --accent-bg:#E8F4F9;
+            --text:     #0D0D0D;
+            --muted:    #9CA3AF;
+            --border:   #EFEFEF;
+            --bg-card:  #F8F8F8;
+            --white:    #FFFFFF;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        html, body { height:100%; overflow:hidden; }
+        body { font-family:'Outfit', sans-serif; background:var(--white); color:var(--text); }
+
+        /* ══════════════════════════════════════════════════
+           SPLASH — LIQUID RISE v2
+           Melhorias:
+           - Pausa mais longa (impacto)
+           - Ponto do logo pulsa antes de subir
+           - Logo principal revela com micro-bounce
+           - Onda mais dramática (amplitude maior)
+        ══════════════════════════════════════════════════ */
+
+        #liquid-layer {
+            position: fixed; left:0; right:0;
+            top: -100px;
+            height: calc(100% + 100px);
+            z-index: 900;
+            pointer-events: none;
+            display: flex; flex-direction: column;
+        }
+        #liquid-body {
+            flex: 1;
+            background: linear-gradient(170deg, #0E3F56 0%, #1E6B8C 55%, #2A8FAF 100%);
+        }
+        #liquid-wave {
+            width:100%; height:100px; flex-shrink:0; display:block;
+        }
+
+        #splash-logo {
+            position: fixed; top:50%; left:50%;
+            transform: translate(-50%, -50%);
+            z-index: 910;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900; font-size: 88px;
+            letter-spacing: -6px; line-height: 1;
+            white-space: nowrap; color: #fff;
+            pointer-events: none;
+            display: flex; align-items: baseline; gap: 0;
+        }
+        #splash-logo-word { display: inline-block; }
+        #splash-logo-dot {
+            display: inline-block;
+            color: rgba(255,255,255,0.45);
+            transform-origin: center bottom;
+        }
+
+        /* Efeito neon subtil no logo do splash */
+        #splash-logo {
+            text-shadow:
+                0 0 30px rgba(255,255,255,0.15),
+                0 0 80px rgba(30,107,140,0.4);
+        }
+
+        /* ══ APP ══ */
+        .app {
+            position: fixed; inset: 0;
+            max-width: 420px; margin: 0 auto;
+            background: var(--white);
+            display: flex; flex-direction: column;
+            z-index: 1;
+        }
+
+        .sticky-top {
+            flex-shrink: 0;
+            background: var(--white);
+            padding: 0 24px 16px;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 0 0;
+        }
+
+        /* Logo header com reveal animado */
+        .header-logo {
+            font-size: 50px;
+            font-weight: 900;
+            letter-spacing: -3px;
+            line-height: 1;
+            color: var(--accent);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .header-logo.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .header-logo .dot { color: var(--text); }
+
+        .entity-chip {
+            display: flex; align-items: center; gap: 8px;
+            padding: 5px 12px 5px 5px;
+            border-radius: 99px;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+        .entity-chip.visible { opacity: 1; }
+        .entity-chip:hover { border-color: var(--accent); background: var(--accent-bg); }
+        .entity-avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 800; color: white;
+            flex-shrink: 0; background: var(--accent);
+        }
+        .entity-chip-name {
+            font-size: 13px; font-weight: 700; color: var(--text);
+            max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            letter-spacing: -0.2px;
+        }
+        .entity-chip-arrow { color: var(--muted); display:flex; }
+
+        .scroll-content {
+            flex: 1; overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 24px 24px 60px;
+        }
+
+        /* ══ GREETING ══ */
+        .greeting {
+            margin-bottom: 24px;
+            opacity: 0; transform: translateY(10px);
+        }
+        .greeting.visible { opacity: 1; transform: translateY(0); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .greeting-eyebrow {
+            font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.14em;
+            color: var(--muted); margin-bottom: 8px;
+        }
+        .greeting-title {
+            font-size: 28px; font-weight: 900;
+            letter-spacing: -1px; line-height: 1.12;
+            font-family: 'Raleway', sans-serif;
+            text-wrap: pretty;
+        }
+        .greeting-title .accent { color: #3A98BD; }
+        .greeting-sub {
+            font-size: 13px; color: var(--muted);
+            margin-top: 8px; line-height: 1.55;
+            font-weight: 400;
+        }
+
+        /* ══ SUMMARY CARDS ══ */
+        .summary-row {
+            display: flex; gap: 10px;
+            margin-bottom: 28px;
+            opacity: 0; transform: translateY(8px);
+        }
+        .summary-row.visible { opacity: 1; transform: translateY(0); transition: opacity 0.5s ease 0.06s, transform 0.5s ease 0.06s; }
+
+        .summary-card {
+            flex: 1;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1.5px solid var(--border);
+            padding: 14px 14px 12px;
+            position: relative; overflow: hidden;
+        }
+        .summary-card-label {
+            font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--muted); margin-bottom: 4px;
+        }
+        .summary-card-value {
+            font-size: 24px; font-weight: 900;
+            letter-spacing: -0.6px; color: var(--text);
+            line-height: 1.1;
+        }
+        .summary-card-value span { font-size: 12px; font-weight: 600; color: var(--muted); margin-left: 2px; }
+        .summary-card-value.small { font-size: 14px; padding-top: 5px; line-height: 1.3; }
+
+        /* Accent stripe na summary card */
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: transparent;
+            border-radius: 99px 0 0 99px;
+            transition: background 0.4s ease;
+        }
+        .summary-card.has-data::before { background: var(--accent); }
+
+        /* ══ RAMO GRID ══ */
+        .section-label {
+            font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.14em;
+            color: var(--muted); margin-bottom: 14px;
+        }
+
+        .ramo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        /* ── Card inativo: não mais cinzento morto ── */
+        /* Usa um fundo levemente texturado, ícone com opacidade média,
+           hover state convidativo, label legível */
+        .ramo-card {
+            background: var(--white);
+            border-radius: 20px;
+            border: 1.5px solid #E8E8E8;
+            padding: 18px 16px 15px;
+            display: flex; flex-direction: column; align-items: flex-start;
+            cursor: pointer;
+            transition: transform 0.22s ease, box-shadow 0.22s ease,
+                        border-color 0.3s ease, background 0.3s ease;
+            position: relative; overflow: hidden;
+            min-height: 124px;
+            opacity: 0; transform: translateY(12px);
+        }
+
+        /* Micro-pattern subtil no card inativo */
+        .ramo-card::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle, #E8E8E8 1px, transparent 1px);
+            background-size: 18px 18px;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            border-radius: 19px;
+        }
+
+        .ramo-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 32px rgba(0,0,0,0.08);
+            border-color: #D0D4DA;
+        }
+        .ramo-card:hover::before { opacity: 0; }
+
+        /* Ícone inativo — visível mas acinzentado com warmth */
+        .ramo-card .ramo-icon svg {
+            stroke: #A8AEB8;
+            transition: stroke 0.35s ease, filter 0.35s ease;
+        }
+        .ramo-card .ramo-name {
+            font-size: 14px; font-weight: 700;
+            color: #6B7280; /* visível! não quase invisível */
+            margin-top: 12px; letter-spacing: -0.2px;
+            transition: color 0.35s ease;
+        }
+        .ramo-card .ramo-status {
+            font-size: 10px; font-weight: 600;
+            color: #9CA3AF;
+            margin-top: 2px;
+            transition: color 0.3s ease;
+            display: flex; align-items: center; gap: 4px;
+        }
+        /* Seta animada no hover */
+        .ramo-card:hover .ramo-status::after {
+            content: ' →';
+        }
+
+        /* ── Card ATIVO ("aceso") ── */
+        .ramo-card.aceso {
+            border-color: rgba(30,107,140,0.25);
+            background: linear-gradient(145deg, #EDF6FB 0%, #F5FBFF 100%);
+        }
+        .ramo-card.aceso::before { display: none; }
+        .ramo-card.aceso .ramo-icon svg {
+            stroke: var(--accent);
+            filter:
+                drop-shadow(0 0 4px rgba(30,107,140,0.5))
+                drop-shadow(0 0 12px rgba(30,107,140,0.25));
+        }
+        .ramo-card.aceso .ramo-name { color: var(--text); }
+        .ramo-card.aceso .ramo-status { color: var(--accent-l); }
+        .ramo-card.aceso:hover {
+            box-shadow: 0 10px 32px rgba(30,107,140,0.14);
+            border-color: rgba(30,107,140,0.35);
+        }
+
+        /* Pip de nível — agora com pulse animation quando ativo */
+        .nivel-pip {
+            position: absolute; top: 14px; right: 14px;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent);
+            display: none;
+        }
+        .ramo-card.aceso .nivel-pip {
+            display: block;
+            box-shadow: 0 0 0 0 rgba(30,107,140,0.5);
+            animation: pipPulse 2.5s ease-out infinite;
+        }
+        @keyframes pipPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(30,107,140,0.5); }
+            60%  { box-shadow: 0 0 0 6px rgba(30,107,140,0); }
+            100% { box-shadow: 0 0 0 0 rgba(30,107,140,0); }
+        }
+
+        .ramo-icon { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; }
+
+        /* ══ HUBU TIP ══ */
+        .hubu-tip {
+            background: var(--bg-card);
+            border-radius: 16px; padding: 14px 15px;
+            display: flex; align-items: flex-start; gap: 10px;
+            border: 1.5px solid var(--border);
+            margin-bottom: 20px;
+            opacity: 0;
+        }
+        .hubu-tip.visible { opacity: 1; transition: opacity 0.5s ease; }
+        .owl { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+        .hubu-tip-text { font-size: 12px; color: var(--muted); line-height: 1.65; }
+        .hubu-tip-text strong { color: var(--text); font-weight: 700; }
+
+        /* ══ FOOTER ══ */
+        .footer { text-align: center; padding-top: 4px; opacity: 0; }
+        .footer.visible { opacity: 1; transition: opacity 0.5s ease; }
+        .footer-text { font-size: 11px; color: #C8CDD6; font-weight: 500; letter-spacing: 0.02em; }
+        .footer-text strong { color: var(--accent); font-weight: 800; }
+
+        /* ══ TIMELINE ══ */
+        .timeline-section { margin-bottom: 28px; }
+        .timeline-section-title {
+            font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--muted); margin-bottom: 12px;
+        }
+        .timeline-list { display: flex; flex-direction: column; gap: 8px; }
+        .timeline-item {
+            display: flex; align-items: center; gap: 12px;
+            background: var(--white); border: 1.5px solid var(--border);
+            border-radius: 14px; padding: 12px 14px;
+        }
+        .timeline-item.urgent { border-color: #FBBF24; background: #FFFBEB; }
+        .timeline-item.overdue { border-color: #FCA5A5; background: #FFF5F5; }
+        .timeline-dot { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--bg-card); }
+        .timeline-item.urgent .timeline-dot { background: #FEF3C7; }
+        .timeline-item.overdue .timeline-dot { background: #FEE2E2; }
+        .timeline-info { flex: 1; min-width: 0; }
+        .timeline-name { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
+        .timeline-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        .timeline-days { font-size: 11px; font-weight: 800; text-align: right; flex-shrink: 0; }
+        .timeline-days.ok { color: var(--muted); }
+        .timeline-days.urgent { color: #D97706; }
+        .timeline-days.overdue { color: #EF4444; }
+
+        /* ══ MODAIS ══ */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.38);
+            z-index: 200; display: flex; align-items: flex-end; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+        .modal-sheet {
+            background: var(--white); border-radius: 24px 24px 0 0;
+            padding: 24px 24px 40px; width: 100%; max-width: 420px;
+            transform: translateY(40px);
+            transition: transform 0.32s cubic-bezier(.22,.68,0,1.2);
+            max-height: 88vh; overflow-y: auto;
+        }
+        .modal-overlay.open .modal-sheet { transform: translateY(0); }
+        .modal-handle { width: 36px; height: 4px; background: #E5E7EB; border-radius: 99px; margin: 0 auto 20px; }
+        .modal-title { font-size: 18px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 4px; color: var(--text); }
+        .modal-subtitle { font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.55; }
+
+        .entity-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .entity-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 14px; border-radius: 14px;
+            border: 1.5px solid var(--border); background: var(--white);
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .entity-row:hover { background: var(--bg-card); }
+        .entity-row.active { border-color: var(--accent); background: var(--accent-bg); }
+        .entity-row-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: white; flex-shrink: 0; }
+        .entity-row-info { flex: 1; min-width: 0; }
+        .entity-row-name { font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .entity-row-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        .entity-row-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+        .entity-row-icon-btn { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; border-radius: 50%; cursor: pointer; color: var(--muted); transition: all 0.2s ease; }
+        .entity-row-icon-btn:hover { background: var(--bg-card); color: var(--text); }
+
+        .btn-add-entity {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 13px 14px;
+            border: 1.5px dashed #D1D5DB; background: transparent; border-radius: 14px;
+            font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700;
+            color: var(--accent); cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-add-entity:hover { border-color: var(--accent); background: var(--accent-bg); }
+
+        .field-group { margin-bottom: 14px; }
+        .field-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
+        .field-input { width: 100%; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; color: var(--text); background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 12px; padding: 12px 14px; outline: none; transition: border-color 0.2s ease; }
+        .field-input::placeholder { color: var(--muted); font-weight: 400; }
+        .field-input:focus { border-color: var(--accent); }
+        .field-hint { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+        .color-picker { display: flex; gap: 8px; flex-wrap: wrap; }
+        .color-dot { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2.5px solid transparent; transition: all 0.2s ease; }
+        .color-dot.selected { border-color: var(--text); transform: scale(1.08); }
+
+        .relation-row { display: flex; gap: 6px; flex-wrap: wrap; }
+        .relation-chip { font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: 99px; background: var(--bg-card); border: 1.5px solid var(--border); color: var(--muted); cursor: pointer; transition: all 0.2s ease; }
+        .relation-chip.selected { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+
+        .contacts-toggle { display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; padding: 8px 0; margin-top: 4px; user-select: none; }
+        .contacts-toggle:hover { color: var(--text); }
+        .contacts-toggle .chev { transition: transform 0.25s ease; display: flex; }
+        .contacts-toggle.open .chev { transform: rotate(180deg); }
+        .contacts-block { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .contacts-block.open { max-height: 600px; }
+
+        .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+        .btn-cancel { flex: 1; padding: 13px; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); cursor: pointer; transition: all 0.2s ease; }
+        .btn-cancel:hover { background: #EFEFEF; }
+        .btn-confirm { flex: 2; padding: 13px; background: var(--accent); border: none; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; color: white; cursor: pointer; transition: all 0.2s ease; }
+        .btn-confirm:hover:not(:disabled) { background: #155270; }
+        .btn-confirm:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn-delete-entity { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin-top: 10px; padding: 11px; background: transparent; border: none; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; color: #EF4444; cursor: pointer; opacity: 0.85; }
+        .btn-delete-entity:hover { opacity: 1; }
+
+        .score-bar-wrap { height: 4px; background: var(--border); border-radius: 99px; margin-top: 7px; overflow: hidden; }
+        .score-bar-fill { height: 100%; border-radius: 99px; transition: width 0.5s cubic-bezier(.22,.68,0,1.2); background: var(--accent); }
+        .score-bar-fill.s-low { background: #E5A93A; }
+        .score-bar-fill.s-mid { background: #C8D400; }
+        .score-bar-fill.s-good { background: #00C96A; }
+        .score-bar-fill.s-full { background: var(--accent); }
+        .entity-score-label { font-size: 10px; font-weight: 700; color: var(--muted); margin-top: 4px; }
+
+        .profile-banner { background: linear-gradient(135deg, #FFF8ED 0%, #FFF3E0 100%); border: 1.5px solid #F5C97A; border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; }
+        .profile-banner-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+        .profile-banner-body { flex: 1; min-width: 0; }
+        .profile-banner-title { font-size: 13px; font-weight: 800; color: #92510A; letter-spacing: -0.2px; }
+        .profile-banner-msg { font-size: 11px; color: #A8680E; margin-top: 2px; line-height: 1.4; }
+        .profile-banner-btn { margin-top: 8px; display: inline-flex; align-items: center; gap: 5px; font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700; color: #92510A; background: rgba(146,81,10,0.1); border: none; border-radius: 99px; padding: 5px 11px; cursor: pointer; transition: background 0.2s; }
+        .profile-banner-btn:hover { background: rgba(146,81,10,0.18); }
+
+        .confirm-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 400; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+        .confirm-modal-overlay.open { opacity: 1; pointer-events: all; }
+        .confirm-modal-box { background: var(--white); border-radius: 20px; padding: 24px; width: 100%; max-width: 320px; transform: scale(0.94); transition: transform 0.25s cubic-bezier(.22,.68,0,1.2); text-align: center; }
+        .confirm-modal-overlay.open .confirm-modal-box { transform: scale(1); }
+        .confirm-modal-icon { width: 48px; height: 48px; background: #FEF2F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; color: #EF4444; }
+        .confirm-modal-title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; color: var(--text); margin-bottom: 6px; }
+        .confirm-modal-msg { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 20px; }
+        .confirm-modal-actions { display: flex; gap: 8px; }
+        .confirm-btn-cancel { flex:1; padding:12px; background:var(--bg-card); border:1.5px solid var(--border); border-radius:12px; font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; color:var(--text); cursor:pointer; }
+        .confirm-btn-danger { flex:1; padding:12px; background:#EF4444; border:none; border-radius:12px; font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; color:white; cursor:pointer; }
+        .confirm-btn-danger:hover { background:#DC2626; }
+
+        .profile-field-row { display: flex; gap: 8px; }
+        .profile-field-row .field-group { flex: 1; margin-bottom: 0; }
+
+        @keyframes fadeup {
+            from { opacity:0; transform:translateX(-50%) translateY(10px); }
+            to   { opacity:1; transform:translateX(-50%) translateY(0); }
+        }
+
+        /* ══ TOAST ══ */
+        .toast {
+            position: fixed; bottom: 32px; left: 50%;
+            transform: translateX(-50%);
+            background: #0D0D0D; color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px; font-weight: 600;
+            padding: 12px 22px; border-radius: 99px;
+            z-index: 9999; white-space: nowrap;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+            animation: fadeup 0.3s ease;
+        }
+    </style>
+</head>
+<body style="background-color: rgb(250, 250, 250);">
+
+<!-- ══ SPLASH LAYER ══ -->
+<div id="liquid-layer">
+    <div id="liquid-body"></div>
+    <svg id="liquid-wave" viewBox="0 390 390 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="wave-path" d="M 0 10 L 390 10 L 390 0 L 0 0 Z" fill="#1E6B8C"></path>
+    </svg>
+</div>
+
+<div id="splash-logo">
+    <span id="splash-logo-word">hubbu</span><span id="splash-logo-dot">.</span>
+</div>
+
+<!-- ══ APP ══ -->
+<div class="app" id="app">
+    <div class="sticky-top">
+        <header>
+            <div class="header-logo visible" id="headerLogo">hubbu<span class="dot">.</span></div>
+            <div class="entity-chip visible" id="entityChip" onclick="openEntitiesModal()" style="opacity: 1;">
+                <div class="entity-avatar" id="entityChipAvatar" style="background: rgb(140, 91, 168);">F</div>
+                <div class="entity-chip-name" id="entityChipName">frf</div><span id="chipScore" style="font-size: 10px; font-weight: 700; color: var(--muted); margin-left: 2px;">17%</span>
+                <div class="entity-chip-arrow">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <div class="scroll-content">
+        <div class="greeting visible" id="greeting">
+            <div class="greeting-title">Proteção total,<br><span class="accent">num só lugar.</span></div>
+            <div class="greeting-sub">Seleciona um seguro para gerir as tuas coberturas.</div>
+        </div>
+
+        <div class="summary-row visible" id="summaryRow">
+            <div class="summary-card has-data" id="summaryCardRamos">
+                <div class="summary-card-label">Seguros ativos</div>
+                <div class="summary-card-value" id="summaryRamosValue">1 <span>de 6</span></div>
+            </div>
+            <div class="summary-card has-data" id="summaryCardVenc" style="cursor:pointer;" onclick="scrollToTimeline()">
+                <div class="summary-card-label">Próx. vencimento</div>
+                <div class="summary-card-value small" id="summaryVencimento" style="font-size: 13px;">🚗 O meu carro <span style="color:inherit">62d</span></div>
+            </div>
+        </div>
+
+        <div class="timeline-section" id="timelineSection" style="display: block;">
+            <div class="timeline-section-title">Calendário de vencimentos</div>
+            <div class="timeline-list" id="timelineList"><div class="timeline-item"><div class="timeline-dot">🚗</div><div class="timeline-info"><div class="timeline-name">O meu carro</div><div class="timeline-meta">Auto · 1/07/2026</div></div><div class="timeline-days ok">62 dias</div></div></div>
+        </div>
+
+        <div class="section-label">Os teus seguros</div>
+        <div class="ramo-grid">
+
+            <div class="ramo-card aceso" data-ramo="auto" onclick="goTo('auto')" style="opacity: 1; transform: translateY(0px);">
+                <div class="nivel-pip"></div>
+                <div class="ramo-icon">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#A8AEB8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path>
+                        <circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle>
+                    </svg>
+                </div>
+                <div class="ramo-name">Auto</div>
+                <div class="ramo-status">Ativo</div>
+            </div>
+
+            <div class="ramo-card" data-ramo="lar" onclick="goTo('lar')" style="opacity: 1; transform: translateY(0px);">
+                <div class="nivel-pip"></div>
+                <div class="ramo-icon">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#A8AEB8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 11.5L12 4l8 7.5"></path>
+                        <path d="M5 10.5V19a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-8.5"></path>
+                    </svg>
+                </div>
+                <div class="ramo-name">Lar</div>
+                <div class="ramo-status">Configurar</div>
+            </div>
+
+            <div class="ramo-card" data-ramo="vida" onclick="goTo('vida')" style="opacity: 1; transform: translateY(0px);">
+                <div class="nivel-pip"></div>
+                <div class="ramo-icon">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#A8AEB8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 21C12 21 3 14.5 3 8.5a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 12.5-9 12.5z"></path>
+                    </svg>
+                </div>
+                <div class="ramo-name">Vida</div>
+                <div class="ramo-status">Configurar</div>
+            </div>
+
+            <div class="ramo-card" data-ramo="saude" onclick="goTo('saude')" style="opacity: 1; transform: translateY(0px);">
+                <div class="nivel-pip"></div>
+                <div class="ramo-icon">
+                    <svg width="34" height="34" viewBox="1 1 22 22" fill="none" stroke="#A8AEB8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- Hastes auriculares -->
+                        <line x1="7.5" y1="2.5" x2="7.5" y2="5"></line>
+                        <line x1="14.5" y1="2.5" x2="14.5" y2="5"></line>
+                        <!-- U largo -->
+                        <path d="M7.5 5 C7.5 5 5 5 5 7.5 L5 12.5 C5 16 8 18 11 18 C14 18 17 16 17 12.5 L17 7.5 C17 5 14.5 5 14.5 5"></path>
+                        <!-- Tubo desce do fundo, curva à direita -->
+                        <path d="M11 18 C11 19.5 12 21 14 21 C16 21 17.5 19.5 17.5 17.5"></path>
+                        <!-- Campânula -->
+                        <circle cx="17.5" cy="16" r="1.8"></circle>
+                    </svg>
+                </div>
+                <div class="ramo-name">Saúde</div>
+                <div class="ramo-status">Configurar</div>
+            </div>
+
+            <div class="ramo-card" data-ramo="bike" onclick="goTo('bike')" style="opacity: 1; transform: translateY(0px);">
+                <div class="nivel-pip"></div>
+                <div class="ramo-icon">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#A8AEB8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- Roda traseira e dianteira -->
+                        <circle cx="5.5" cy="16.5" r="3.5"></circle>
+                        <circle cx="18.5" cy="16.5" r="3.5"></circle>
+                        <!-- Quadro: triângulo central -->
+                        <path d="M5.5 16.5 L10 7 L18.5 16.5"></path>
+                        <!-- Diagonal do quadro -->
+                        <path d="M10 7 L14 16.5"></path>
+                        <!-- Selim -->
+                        <path d="M8 7 L12 7"></path>
+                        <!-- Haste do guidão -->
+                        <path d="M18.5 13 L18.5 10"></path>
+                        <!-- Guidão -->
+                        <path d="M16.5 10 L20.5 10"></path>
+                    </svg>
+                </div>
+                <div class="ramo-name">Bicicleta</div>
+                <div class="ramo-status">Configurar</div>
+            </div>
+
+            <div class="ramo-card" data-ramo="pet" onclick="goTo('pet')" style="opacity: 1; transform: translateY(0px);">
+                <div class="nivel-pip"></div>
+                <div class="ramo-icon">
+                    <svg width="34" height="34" viewBox="2 2 44 44" fill="none" stroke="#A8AEB8" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- Palma -->
+                        <path d="M16 30 C16 24 19 21 24 21 C29 21 32 24 32 30 C32 36 29 39 24 39 C19 39 16 36 16 30"></path>
+                        <!-- 4 dedos -->
+                        <ellipse cx="13" cy="20" rx="3" ry="4"></ellipse>
+                        <ellipse cx="20" cy="15.5" rx="3" ry="4"></ellipse>
+                        <ellipse cx="28" cy="15.5" rx="3" ry="4"></ellipse>
+                        <ellipse cx="35" cy="20" rx="3" ry="4"></ellipse>
+                    </svg>
+                </div>
+                <div class="ramo-name">Pet</div>
+                <div class="ramo-status">Configurar</div>
+            </div>
+
+        </div>
+
+        <div class="hubu-tip visible" id="hubuTip">
+            <div class="hubu-tip-text" style="font-family:'Raleway',sans-serif; font-size:11px; font-weight:700; color:var(--muted); letter-spacing:0.02em; line-height:1.6;">
+                Todos os teus seguros. Uma plataforma. Zero confusão.
+            </div>
+        </div>
+
+        <div class="footer visible" id="footer">
+            <div class="footer-text"><strong>hyybu.</strong> — todos os teus seguros, simples.</div>
+            <div style="font-size:10px; color:#D1D5DB; margin-top:6px; line-height:1.6;">
+                © 2026 Hyybu. Todos os direitos reservados.<br>
+                Plataforma de gestão de seguros. Não constitui aconselhamento financeiro.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BOTÃO CHAT FLUTUANTE -->
+<button onclick="window.location.href='hyybu-chat.html'" style="position:fixed;bottom:28px;right:20px;width:56px;height:56px;border-radius:50%;background:var(--accent);border:none;box-shadow:0 4px 20px rgba(30,107,140,0.4);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:999;" ontouchstart="this.style.transform='scale(0.93)'" ontouchend="this.style.transform='scale(1)'">
+    <img src="hyybu-owl.png" alt="Chat" style="width:38px;height:38px;border-radius:50%;object-fit:cover;">
+
+<!-- ══ MODAIS ══ -->
+<div class="modal-overlay" id="entitiesOverlay" onclick="handleEntitiesOverlayClick(event)">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+            <div class="modal-title" style="margin-bottom:0;">A minha família</div>
+            <button onclick="closeEntitiesModal()" style="width:30px;height:30px;border-radius:50%;border:none;background:var(--bg-card);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="modal-subtitle">Seleciona uma ou mais pessoas para ver os seguros combinados.</div>
+        <div class="entity-list" id="entitiesList"></div>
+        <button class="btn-add-entity" onclick="openEntityFormModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Adicionar familiar
+        </button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="entityFormOverlay" onclick="handleEntityFormOverlayClick(event)">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+            <div class="modal-title" id="entityFormTitle" style="margin-bottom:0;">Adicionar familiar</div>
+            <button onclick="closeEntityFormModal()" style="width:30px;height:30px;border-radius:50%;border:none;background:var(--bg-card);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="modal-subtitle">Dados básicos para começares a gerir os seguros desta pessoa.</div>
+        <div class="field-group">
+            <div class="field-label">Nome</div>
+            <input type="text" id="inputEntityName" class="field-input" placeholder="ex: João, Mãe, Filho" oninput="validateEntityForm()" maxlength="40">
+        </div>
+        <div class="field-group">
+            <div class="field-label">Relação <span style="text-transform:none;font-weight:500;color:#9CA3AF;">(opcional)</span></div>
+            <div class="relation-row" id="relationRow">
+                <div class="relation-chip" data-rel="eu" onclick="selectRelation(this)">Eu</div>
+                <div class="relation-chip" data-rel="conjuge" onclick="selectRelation(this)">Cônjuge</div>
+                <div class="relation-chip" data-rel="filho" onclick="selectRelation(this)">Filho/a</div>
+                <div class="relation-chip" data-rel="pai" onclick="selectRelation(this)">Pai/Mãe</div>
+                <div class="relation-chip" data-rel="outro" onclick="selectRelation(this)">Outro</div>
+            </div>
+        </div>
+        <div class="field-group">
+            <div class="field-label">Cor</div>
+            <div class="color-picker" id="colorPicker"></div>
+        </div>
+        <div class="contacts-toggle" id="contactsToggle" onclick="toggleContactsBlock()">
+            <span>Contactos para alertas <span style="font-weight:500;color:#9CA3AF;">(opcional)</span></span>
+            <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </div>
+        <div class="contacts-block" id="contactsBlock">
+            <div class="field-hint" style="margin-bottom:10px;">Definir aqui evita repetir em cada apólice.</div>
+            <div class="field-group"><div class="field-label">Email</div><input type="email" id="inputEntityEmail" class="field-input" placeholder="email@exemplo.pt"></div>
+            <div class="field-group"><div class="field-label">Telemóvel</div><input type="tel" id="inputEntityPhone" class="field-input" placeholder="+351 9XX XXX XXX"></div>
+        </div>
+        <div class="contacts-toggle" id="profileToggle" onclick="toggleProfileBlock()">
+            <span>Dados para cotação <span style="font-weight:500;color:#9CA3AF;">(opcional)</span></span>
+            <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </div>
+        <div class="contacts-block" id="profileBlock">
+            <div class="field-hint" style="margin-bottom:10px;">Necessários para pedir cotação.</div>
+            <div class="profile-field-row">
+                <div class="field-group"><div class="field-label">NIF</div><input type="text" id="inputEntityNif" class="field-input" placeholder="123456789" maxlength="9" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+                <div class="field-group"><div class="field-label">Data de nascimento</div><input type="date" id="inputEntityDob" class="field-input"></div>
+            </div>
+            <div class="field-group"><div class="field-label">Morada</div><input type="text" id="inputEntityAddress" class="field-input" placeholder="Rua, número, andar"></div>
+            <div class="field-group"><div class="field-label">Código postal</div><input type="text" id="inputEntityPostal" class="field-input" placeholder="1234-567" maxlength="8"></div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeEntityFormModal()">Cancelar</button>
+            <button class="btn-confirm" id="btnConfirmEntity" onclick="saveEntity()" disabled="">Guardar</button>
+        </div>
+        <button class="btn-delete-entity" id="btnDeleteEntity" style="display:none;" onclick="deleteEntity()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>
+            Remover esta pessoa
+        </button>
+    </div>
+</div>
+
+<div class="confirm-modal-overlay" id="confirmOverlay">
+    <div class="confirm-modal-box">
+        <div class="confirm-modal-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6M14 11v6"></path></svg>
+        </div>
+        <div class="confirm-modal-title" id="confirmTitle">Tens a certeza?</div>
+        <div class="confirm-modal-msg" id="confirmMsg"></div>
+        <div class="confirm-modal-actions">
+            <button class="confirm-btn-cancel" id="confirmCancel">Cancelar</button>
+            <button class="confirm-btn-danger" id="confirmOk">Remover</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   SPLASH v14 — LIQUID RISE DRAMÁTICO
+   Melhorias:
+   1. Pausa mais longa (0.9s vs 0.7s) — tensão antes de subir
+   2. Ponto pulsa 2x antes da onda começar
+   3. Onda com amplitude muito maior (70px vs 34px) — mais dramático
+   4. Easing mais agressivo (aceleração + desaceleração)
+   5. Header logo revela com spring bounce
+   6. Cards entram com stagger mais suave
+══════════════════════════════════════════════════════════ */
+
+const $liquid   = document.getElementById('liquid-layer');
+const $wavePath = document.getElementById('wave-path');
+const $splashLogo     = document.getElementById('splash-logo');
+const $splashLogoDot  = document.getElementById('splash-logo-dot');
+const $headerLogo     = document.getElementById('headerLogo');
+const $entityChip     = document.getElementById('entityChip');
+const $greeting       = document.getElementById('greeting');
+const $summaryRow     = document.getElementById('summaryRow');
+const $hubuTip        = document.getElementById('hubuTip');
+const $footer         = document.getElementById('footer');
+
+function easeOutExpo(t) {
+    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+}
+function easeInOutQuart(t) {
+    return t < 0.5 ? 8*t*t*t*t : 1 - Math.pow(-2*t+2, 4)/2;
+}
+
+function runSplash() {
+    const vh = window.innerHeight;
+
+    // ── Fase 1 (T+0.0): Pausa de impacto ──
+    // Logo já está visível no blue
+
+    // ── Fase 2 (T+0.5s): Ponto pulsa — chama atenção ──
+    setTimeout(() => {
+        pulseDot(0);
+    }, 500);
+    setTimeout(() => {
+        pulseDot(1);
+    }, 700);
+
+    // ── Fase 3 (T+0.95s): Onda começa a subir ──
+    setTimeout(() => {
+        const DURATION = 1400;
+        const t0 = performance.now();
+        let wavePhase = 0;
+
+        function tick(now) {
+            const elapsed = now - t0;
+            const t = Math.min(elapsed / DURATION, 1);
+            const eased = easeInOutQuart(t);
+            const moveY = eased * (vh + 100);
+
+            wavePhase += 0.042;
+
+            // Amplitude dramática — muito maior no meio da animação
+            const amp = Math.sin(t * Math.PI) * 68;
+            const W = 390;
+            const phase2 = Math.sin(wavePhase * 1.3 + 1.2) * 0.08;
+            const p = [
+                `M 0 10`,
+                `C ${W*0.12} ${10 + amp}, ${W*0.36 + phase2*W} ${10 - amp*0.7}, ${W*0.5} 10`,
+                `C ${W*0.64} ${10 + amp*0.7}, ${W*0.88 - phase2*W} ${10 - amp}, ${W} 10`,
+                `L ${W} 0 L 0 0 Z`
+            ].join(' ');
+            $wavePath.setAttribute('d', p);
+            $liquid.style.transform = `translateY(${-moveY}px)`;
+
+            if (t < 1) {
+                requestAnimationFrame(tick);
+            } else {
+                $liquid.remove();
+                $splashLogo.remove();
+            }
+        }
+        requestAnimationFrame(tick);
+    }, 950);
+
+    // ── Fase 4 (T+1.3s): Logo splash faz fade out ──
+    setTimeout(() => {
+        $splashLogo.style.transition = 'opacity 0.4s ease';
+        $splashLogo.style.opacity = '0';
+    }, 1300);
+
+    // ── Fase 5 (T+2.1s): Header logo com bounce ──
+    setTimeout(() => {
+        $headerLogo.classList.add('visible');
+        setTimeout(() => {
+            $entityChip.style.transition = 'opacity 0.45s ease';
+            $entityChip.classList.add('visible');
+        }, 80);
+    }, 2100);
+
+    // ── Fase 6 (T+2.35s): Conteúdo em cascata ──
+    setTimeout(() => {
+        $greeting.classList.add('visible');
+        setTimeout(() => $summaryRow.classList.add('visible'), 80);
+
+        const cards = document.querySelectorAll('.ramo-card');
+        cards.forEach((card, i) => {
+            setTimeout(() => {
+                card.style.transition = 'opacity 0.45s ease, transform 0.45s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease, border-color 0.3s ease, background 0.3s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 60 + i * 55);
+        });
+
+        setTimeout(() => {
+            $hubuTip.classList.add('visible');
+            $footer.classList.add('visible');
+        }, 60 + cards.length * 55 + 60);
+    }, 2350);
+}
+
+function pulseDot(idx) {
+    const scale = idx === 0 ? [1, 1.5, 1] : [1, 1.8, 0.85, 1];
+    const dur = idx === 0 ? 200 : 280;
+    const steps = scale.length;
+    scale.forEach((s, i) => {
+        setTimeout(() => {
+            $splashLogoDot.style.transition = `transform ${dur / steps}ms cubic-bezier(0.34,1.56,0.64,1)`;
+            $splashLogoDot.style.transform = `scale(${s})`;
+        }, i * (dur / steps));
+    });
+}
+
+/* ══ SPLASH — corre sempre ══ */
+document.fonts.ready.then(() => {
+    runSplash();
+});
+
+/* ══════════════════════════════════════════════════
+   SISTEMA DE ENTIDADES
+══════════════════════════════════════════════════ */
+const STORAGE_KEY = 'hubbu_entities_v1';
+const ACTIVE_KEY  = 'hubbu_active_entity_v1';
+
+const ENTITY_COLORS = [
+    '#1E6B8C','#5B6B95','#2A8C7E','#C9A356',
+    '#B96A5C','#8C5BA8','#6B7280','#0D0D0D'
+];
+const RELATION_LABELS = {
+    eu:'Eu', conjuge:'Cônjuge', filho:'Filho/a', pai:'Pai/Mãe', outro:'Outro'
+};
+
+function loadEntities() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) { const arr = JSON.parse(raw); if (Array.isArray(arr) && arr.length) return arr; }
+    } catch(e) {}
+    const def = [{ id:'e'+Date.now(), name:'Eu', relation:'eu', color:ENTITY_COLORS[0], email:'', phone:'', ramos:{auto:false,lar:false,vida:false,saude:false,bike:false,pet:false} }];
+    saveEntities(def); return def;
+}
+function saveEntities(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+function getActiveId() { return localStorage.getItem(ACTIVE_KEY) || entities[0].id; }
+function setActiveId(id) { localStorage.setItem(ACTIVE_KEY, id); }
+function getInitials(name) { if (!name) return '?'; const p = name.trim().split(/\s+/).filter(Boolean); return p.length===1 ? p[0][0].toUpperCase() : (p[0][0]+p[p.length-1][0]).toUpperCase(); }
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+let entities = loadEntities();
+let activeId = getActiveId();
+if (!entities.find(e=>e.id===activeId)) { activeId=entities[0].id; setActiveId(activeId); }
+
+// Seleção múltipla — IDs das entidades selecionadas
+const SELECTED_KEY = 'hubbu_selected_entities_v1';
+function loadSelected() {
+    try { const r=localStorage.getItem(SELECTED_KEY); if(r){const a=JSON.parse(r);if(Array.isArray(a)&&a.length)return a;} } catch(e) {}
+    return [activeId];
+}
+function saveSelected(arr) { localStorage.setItem(SELECTED_KEY, JSON.stringify(arr)); }
+let selectedIds = loadSelected().filter(id=>entities.find(e=>e.id===id));
+if (!selectedIds.length) selectedIds = [entities[0].id];
+
+let editingEntityId=null, formColor=ENTITY_COLORS[0], formRelation=null;
+
+/* Score helpers */
+const NIVEL_SCORE = { cinzento:0, laranja:0.2, 'amarelo-claro':0.4, amarelo:0.6, verde:0.8, azul:1.0 };
+function calcNivelFromCar(s) {
+    if (!s.rc) return 'cinzento';
+    if (!(s.assist||s.ocupantes||s.juridica)) return 'laranja';
+    if (!s.vidros) return 'amarelo-claro';
+    if (!(s.furto||s.incendio||s.fenomenos)) return 'amarelo';
+    if (!s.choque) return 'verde';
+    return 'azul';
+}
+function calcAutoData(entityId) {
+    try {
+        const raw = localStorage.getItem('hubbu_auto_'+entityId);
+        if (!raw) return { nivelScore:0, vencimentos:[] };
+        const data = JSON.parse(raw);
+        if (!data||!Array.isArray(data.cars)) return { nivelScore:0, vencimentos:[] };
+        const cars = data.cars;
+        const scores = cars.map(c=>NIVEL_SCORE[calcNivelFromCar(c)]||0);
+        const nivelScore = scores.reduce((a,b)=>a+b,0)/scores.length;
+        const CAR_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle></svg>`;
+        const vencimentos = cars.filter(c=>c.vencimento).map(c=>({
+            label:c.matricula?c.matricula.toUpperCase():(c.marca||'Viatura'),
+            ramo:'Auto', emoji:CAR_SVG, data:c.vencimento
+        }));
+        return { nivelScore, vencimentos };
+    } catch(e) { return { nivelScore:0, vencimentos:[] }; }
+}
+function calcEntityScore(ent) {
+    const ramos = ent.ramos||{};
+    const autoData = calcAutoData(ent.id);
+    let total = 0;
+    ['auto','lar','vida','saude','bike','pet'].forEach(r=>{
+        total += r==='auto' ? autoData.nivelScore : (ramos[r]?1:0);
+    });
+    return Math.round((total/6)*100);
+}
+function scoreClass(pct) { return pct>=80?'s-full':pct>=50?'s-good':pct>=25?'s-mid':'s-low'; }
+function getMissingProfileFields(ent) { const m=[]; if(!ent.nif) m.push('NIF'); if(!ent.dob) m.push('data de nascimento'); if(!ent.address) m.push('morada'); return m; }
+
+function getAllVencimentos() {
+    const ent = entities.find(e=>e.id===activeId)||entities[0];
+    const autoData = calcAutoData(ent.id);
+    return autoData.vencimentos.map(v=>({...v, entityName:ent.name, entityColor:ent.color}));
+}
+
+/* Render */
+function renderSummary() {
+    const ent = entities.find(e=>e.id===activeId)||entities[0];
+    const ramos = ent.ramos||{};
+    const ativos = Object.values(ramos).filter(Boolean).length;
+    document.getElementById('summaryRamosValue').innerHTML = `${ativos} <span>de 6</span>`;
+    document.getElementById('summaryCardRamos').classList.toggle('has-data', ativos > 0);
+
+    const vencs = getAllVencimentos();
+    const hoje = new Date(); hoje.setHours(0,0,0,0);
+    const futuros = vencs.map(v=>({...v, dias:Math.ceil((new Date(v.data)-hoje)/86400000)})).sort((a,b)=>a.dias-b.dias);
+    const proxEl = document.getElementById('summaryVencimento');
+    if (futuros.length) {
+        const p = futuros[0];
+        const diasStr = p.dias<0?'Vencido':p.dias===0?'Hoje':`${p.dias}d`;
+        proxEl.innerHTML = `${p.label} <span style="color:${p.dias<=7?'#D97706':'inherit'}">${diasStr}</span>`;
+        proxEl.style.fontSize = '13px';
+        document.getElementById('summaryCardVenc').classList.add('has-data');
+    } else {
+        proxEl.textContent = '—';
+        proxEl.style.fontSize = '';
+        document.getElementById('summaryCardVenc').classList.remove('has-data');
+    }
+
+    const section = document.getElementById('timelineSection');
+    const list = document.getElementById('timelineList');
+    if (futuros.length) {
+        section.style.display = 'block';
+        list.innerHTML = '';
+        futuros.forEach(v => {
+            const urgente = v.dias>=0 && v.dias<=30;
+            const vencido = v.dias<0;
+            const item = document.createElement('div');
+            item.className = 'timeline-item'+(vencido?' overdue':urgente?' urgent':'');
+            const dataFmt = new Date(v.data).toLocaleDateString('pt-PT',{day:'numeric',month:'short',year:'numeric'});
+            const diasLabel = vencido?`Vencido há ${Math.abs(v.dias)}d`:v.dias===0?'Vence hoje':`${v.dias} dias`;
+            const diasClass = vencido?'overdue':urgente?'urgent':'ok';
+            item.innerHTML = `<div class="timeline-dot">${v.emoji}</div><div class="timeline-info"><div class="timeline-name">${escapeHtml(v.label)}</div><div class="timeline-meta">${v.ramo} · ${dataFmt}</div></div><div class="timeline-days ${diasClass}">${diasLabel}</div>`;
+            list.appendChild(item);
+        });
+    } else {
+        section.style.display = 'none';
+    }
+
+    document.querySelectorAll('.ramo-card[data-ramo]').forEach(el => {
+        const r = el.dataset.ramo;
+        el.classList.toggle('aceso', !!ramos[r]);
+        const status = el.querySelector('.ramo-status');
+        if (status) status.textContent = ramos[r] ? 'Ativo' : 'Configurar';
+    });
+}
+
+function scrollToTimeline() {
+    const el = document.getElementById('timelineSection');
+    if (el && el.style.display !== 'none') {
+        el.scrollIntoView ? null : null;
+        document.querySelector('.scroll-content').scrollTop = el.offsetTop - 16;
+    }
+}
+
+function renderEntityChip() {
+    const av = document.getElementById('entityChipAvatar');
+    const nm = document.getElementById('entityChipName');
+    let cs = document.getElementById('chipScore');
+    if (!cs) {
+        cs = document.createElement('span');
+        cs.id = 'chipScore';
+        cs.style.cssText = 'font-size:10px;font-weight:700;color:var(--muted);margin-left:2px;';
+        nm.after(cs);
+    }
+    if (selectedIds.length === entities.length && entities.length > 1) {
+        // Todos
+        av.textContent = '👨‍👩‍👧';
+        av.style.background = 'var(--accent)';
+        nm.textContent = 'Família';
+        cs.textContent = '';
+    } else if (selectedIds.length > 1) {
+        // Vários
+        const first = entities.find(e=>e.id===selectedIds[0]);
+        av.textContent = getInitials(first.name);
+        av.style.background = first.color;
+        nm.textContent = `${first.name} +${selectedIds.length-1}`;
+        cs.textContent = '';
+    } else {
+        // Um só
+        const ent = entities.find(e=>e.id===selectedIds[0])||entities[0];
+        av.textContent = getInitials(ent.name);
+        av.style.background = ent.color;
+        nm.textContent = ent.name;
+        const score = calcEntityScore(ent);
+        cs.textContent = score > 0 ? `${score}%` : '';
+    }
+}
+
+/* Entities modal */
+function openEntitiesModal() { renderEntitiesList(); document.getElementById('entitiesOverlay').classList.add('open'); }
+function closeEntitiesModal() { document.getElementById('entitiesOverlay').classList.remove('open'); }
+function handleEntitiesOverlayClick(e) { if (e.target===document.getElementById('entitiesOverlay')) closeEntitiesModal(); }
+
+function renderEntitiesList() {
+    const list = document.getElementById('entitiesList');
+    list.innerHTML = '';
+
+    // Botão "Todos" — só aparece se há mais de 1 entidade
+    if (entities.length > 1) {
+        const allSelected = selectedIds.length === entities.length;
+        const todosBtn = document.createElement('div');
+        todosBtn.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:14px;border:1.5px solid '+(allSelected?'var(--accent)':'var(--border)')+';background:'+(allSelected?'var(--accent-bg)':'var(--bg-card)')+';cursor:pointer;margin-bottom:6px;';
+        todosBtn.innerHTML = `<div style="display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px;">👨‍👩‍👧</div><div><div style="font-size:14px;font-weight:700;color:var(--text);">Toda a família</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${entities.length} pessoas</div></div></div><div style="width:22px;height:22px;border-radius:50%;border:1.5px solid ${allSelected?'var(--accent)':'#D1D5DB'};background:${allSelected?'var(--accent)':'white'};display:flex;align-items:center;justify-content:center;">${allSelected?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>':''}</div>`;
+        todosBtn.onclick = () => {
+            if (allSelected) { selectedIds=[entities[0].id]; } else { selectedIds=entities.map(e=>e.id); }
+            saveSelected(selectedIds);
+            renderEntitiesList();
+            renderEntityChip();
+            renderSummary();
+        };
+        list.appendChild(todosBtn);
+    }
+
+    entities.forEach(ent => {
+        const isSelected = selectedIds.includes(ent.id);
+        const ativos = Object.values(ent.ramos||{}).filter(Boolean).length;
+        const relLabel = ent.relation&&RELATION_LABELS[ent.relation] ? RELATION_LABELS[ent.relation] : 'Sem relação';
+        const score = calcEntityScore(ent);
+        const sc = scoreClass(score);
+        const row = document.createElement('div');
+        row.className = 'entity-row'+(isSelected?' active':'');
+        row.innerHTML = `<div style="display:flex;align-items:center;gap:12px;width:100%;"><div class="entity-row-avatar" style="background:${ent.color};">${getInitials(ent.name)}</div><div class="entity-row-info"><div class="entity-row-name">${escapeHtml(ent.name)}</div><div class="entity-row-meta">${relLabel} · ${ativos} ramo${ativos===1?'':'s'} ativo${ativos===1?'':'s'}</div><div class="score-bar-wrap"><div class="score-bar-fill ${sc}" style="width:${score}%;"></div></div></div><div style="display:flex;align-items:center;gap:6px;flex-shrink:0;"><button class="entity-row-icon-btn" onclick="event.stopPropagation();openEntityFormModal('${ent.id}')" title="Editar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button><div style="width:22px;height:22px;border-radius:50%;border:1.5px solid ${isSelected?'var(--accent)':'#D1D5DB'};background:${isSelected?'var(--accent)':'white'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">${isSelected?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>':''}</div></div></div>`;
+        row.onclick = () => {
+            if (selectedIds.includes(ent.id)) {
+                if (selectedIds.length > 1) selectedIds = selectedIds.filter(id=>id!==ent.id);
+            } else {
+                selectedIds = [...selectedIds, ent.id];
+            }
+            activeId = selectedIds[0]; setActiveId(activeId);
+            saveSelected(selectedIds);
+            renderEntitiesList();
+            renderEntityChip();
+            renderSummary();
+        };
+        list.appendChild(row);
+    });
+}
+
+function selectEntity(id) { 
+    activeId=id; setActiveId(id); 
+    selectedIds=[id]; saveSelected(selectedIds);
+    renderEntityChip(); renderSummary(); closeEntitiesModal(); 
+}
+
+/* Entity form */
+function openEntityFormModal(id, openProfile=false) {
+    editingEntityId = id||null;
+    const isEdit = !!id;
+    const ent = isEdit ? entities.find(e=>e.id===id) : null;
+    document.getElementById('entityFormTitle').textContent = isEdit ? 'Editar pessoa' : 'Adicionar familiar';
+    ['Name','Email','Phone','Nif','Dob','Address','Postal'].forEach(f => {
+        const el = document.getElementById('inputEntity'+f);
+        if (el) el.value = ent?.[f.toLowerCase()] || (f==='Dob'?ent?.dob:'') || '';
+    });
+    document.getElementById('inputEntityName').value = ent?.name||'';
+    document.getElementById('inputEntityEmail').value = ent?.email||'';
+    document.getElementById('inputEntityPhone').value = ent?.phone||'';
+    document.getElementById('inputEntityNif').value = ent?.nif||'';
+    document.getElementById('inputEntityDob').value = ent?.dob||'';
+    document.getElementById('inputEntityAddress').value = ent?.address||'';
+    document.getElementById('inputEntityPostal').value = ent?.postal||'';
+    formRelation = ent?.relation||null;
+    document.querySelectorAll('.relation-chip').forEach(c=>c.classList.toggle('selected',c.dataset.rel===formRelation));
+    formColor = ent?.color || pickNextColor();
+    renderColorPicker();
+    const hasContacts = !!(ent?.email||ent?.phone);
+    document.getElementById('contactsBlock').classList.toggle('open',hasContacts);
+    document.getElementById('contactsToggle').classList.toggle('open',hasContacts);
+    const hasProfile = !!(ent?.nif||ent?.dob||ent?.address)||openProfile;
+    document.getElementById('profileBlock').classList.toggle('open',hasProfile);
+    document.getElementById('profileToggle').classList.toggle('open',hasProfile);
+    document.getElementById('btnDeleteEntity').style.display = (isEdit&&entities.length>1)?'flex':'none';
+    validateEntityForm();
+    document.getElementById('entityFormOverlay').classList.add('open');
+    setTimeout(()=>document.getElementById('inputEntityName').focus(),250);
+}
+function pickNextColor() { const used=entities.map(e=>e.color); return ENTITY_COLORS.find(c=>!used.includes(c))||ENTITY_COLORS[0]; }
+function renderColorPicker() {
+    const picker=document.getElementById('colorPicker'); picker.innerHTML='';
+    ENTITY_COLORS.forEach(c=>{
+        const d=document.createElement('div'); d.className='color-dot'+(c===formColor?' selected':''); d.style.background=c;
+        d.onclick=()=>{formColor=c;renderColorPicker();}; picker.appendChild(d);
+    });
+}
+function selectRelation(el) {
+    const rel=el.dataset.rel;
+    if (formRelation===rel) { formRelation=null; el.classList.remove('selected'); }
+    else { formRelation=rel; document.querySelectorAll('.relation-chip').forEach(c=>c.classList.toggle('selected',c.dataset.rel===rel)); }
+}
+function toggleContactsBlock() { document.getElementById('contactsBlock').classList.toggle('open'); document.getElementById('contactsToggle').classList.toggle('open'); }
+function toggleProfileBlock() { document.getElementById('profileBlock').classList.toggle('open'); document.getElementById('profileToggle').classList.toggle('open'); }
+function closeEntityFormModal() { document.getElementById('entityFormOverlay').classList.remove('open'); }
+function handleEntityFormOverlayClick(e) { if (e.target===document.getElementById('entityFormOverlay')) closeEntityFormModal(); }
+function validateEntityForm() { document.getElementById('btnConfirmEntity').disabled=!document.getElementById('inputEntityName').value.trim(); }
+
+function saveEntity() {
+    const name=document.getElementById('inputEntityName').value.trim(); if(!name)return;
+    const data = {
+        name, relation:formRelation, color:formColor,
+        email:document.getElementById('inputEntityEmail').value.trim(),
+        phone:document.getElementById('inputEntityPhone').value.trim(),
+        nif:document.getElementById('inputEntityNif').value.trim(),
+        dob:document.getElementById('inputEntityDob').value,
+        address:document.getElementById('inputEntityAddress').value.trim(),
+        postal:document.getElementById('inputEntityPostal').value.trim(),
+    };
+    if (editingEntityId) {
+        Object.assign(entities.find(e=>e.id===editingEntityId), data);
+    } else {
+        const newEnt = {...data, id:'e'+Date.now(), ramos:{auto:false,lar:false,vida:false,saude:false,bike:false,pet:false}};
+        entities.push(newEnt); activeId=newEnt.id; setActiveId(activeId);
+    }
+    saveEntities(entities); closeEntityFormModal(); renderEntityChip(); renderSummary(); renderEntitiesList();
+}
+
+let confirmCallback=null;
+function showConfirm(title,msg,onOk) { document.getElementById('confirmTitle').textContent=title; document.getElementById('confirmMsg').textContent=msg; confirmCallback=onOk; document.getElementById('confirmOverlay').classList.add('open'); }
+document.getElementById('confirmCancel').onclick=()=>{ document.getElementById('confirmOverlay').classList.remove('open'); confirmCallback=null; };
+document.getElementById('confirmOk').onclick=()=>{ document.getElementById('confirmOverlay').classList.remove('open'); if(confirmCallback){confirmCallback();confirmCallback=null;} };
+
+function deleteEntity() {
+    if (!editingEntityId||entities.length<=1) return;
+    const ent=entities.find(e=>e.id===editingEntityId);
+    showConfirm(`Remover ${ent.name}?`,`Os seguros desta pessoa serão apagados permanentemente.`,()=>{
+        entities=entities.filter(e=>e.id!==editingEntityId);
+        if (activeId===editingEntityId) { activeId=entities[0].id; setActiveId(activeId); }
+        try{localStorage.removeItem('hubbu_auto_'+editingEntityId);}catch(e){}
+        saveEntities(entities); closeEntityFormModal(); renderEntityChip(); renderSummary(); renderEntitiesList();
+    });
+}
+
+/* Navegação */
+const ROTAS = { auto:'hyybu-mvp.html', lar:null, vida:null, saude:null, bike:null, pet:null };
+function goTo(ramo) { if (ROTAS[ramo]) window.location.href=ROTAS[ramo]; else showBreve(ramo); }
+function showBreve(ramo) {
+    const ex=document.getElementById('toast-el'); if(ex)ex.remove();
+    const t=document.createElement('div'); t.id='toast-el'; t.className='toast';
+    const nomes={lar:'Lar',vida:'Vida',saude:'Saúde',bike:'Bicicleta',pet:'Pet'};
+    t.innerHTML=`🦉 <strong>${nomes[ramo]}</strong> — em breve!`;
+    document.body.appendChild(t);
+    setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity 0.4s'; setTimeout(()=>t.remove(),400); },2200);
+}
+
+/* Init */
+renderEntityChip();
+renderSummary();
+</script>
+
+
+</body></html>

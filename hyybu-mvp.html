@@ -1,0 +1,1344 @@
+<!DOCTYPE html><html lang="pt"><head>
+
+
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hubbu — Auto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent:        #1E6B8C;
+            --accent-l:      #3A98BD;
+            --accent-bg:     #E8F4F9;
+            --laranja:       #FF7A00;
+            --amarelo-claro: #F5E97A;
+            --amarelo:       #C8D400;
+            --verde:         #00C96A;
+            --azul:          #0088EE;
+            --text:          #0D0D0D;
+            --muted:         #9CA3AF;
+            --border:        #EFEFEF;
+            --bg-card:       #F8F8F8;
+            --white:         #FFFFFF;
+
+            /* cores por nível — usadas no gauge e hero */
+            --col-cinzento:      #9CA3AF;
+            --col-laranja:       #FF7A00;
+            --col-amarelo-claro: #EDD835;
+            --col-amarelo:       #C8D400;
+            --col-verde:         #00C96A;
+            --col-azul:          #0088EE;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        html, body { height:100%; }
+        body { font-family:'Outfit',sans-serif; background:#F7F9FB; color:var(--text); }
+
+        .app { max-width:420px; margin:0 auto; min-height:100vh; background:var(--white); display:flex; flex-direction:column; }
+
+        /* ══ STICKY TOP ══ */
+        .sticky-top {
+            position:sticky; top:0; z-index:100;
+            background:var(--white);
+            padding:0 24px 18px;
+            border-bottom:1px solid var(--border);
+            box-shadow:0 2px 20px rgba(0,0,0,0.04);
+        }
+
+        header { display:flex; justify-content:space-between; align-items:center; padding:28px 0 14px; }
+        .logo { font-size:50px; font-weight:900; letter-spacing:-3px; color:var(--accent); line-height:1; }
+        .logo .dot { color:var(--text); }
+
+        /* ── Entity chip ── */
+        .entity-chip { display:flex; align-items:center; gap:8px; padding:5px 12px 5px 5px; border-radius:99px; background:var(--bg-card); border:1.5px solid var(--border); cursor:pointer; transition:all 0.2s ease; font-family:'Outfit',sans-serif; }
+        .entity-chip:hover { border-color:var(--accent); background:var(--accent-bg); }
+        .entity-avatar { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:white; flex-shrink:0; background:var(--accent); }
+        .entity-chip-name { font-size:13px; font-weight:700; color:var(--text); max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; letter-spacing:-0.2px; }
+        .entity-chip-arrow { color:var(--muted); display:flex; }
+
+        /* ── Car tabs ── */
+        .car-tabs-row { display:flex; align-items:center; gap:7px; margin-bottom:14px; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; }
+        .car-tabs-row::-webkit-scrollbar { display:none; }
+        .car-tab { display:flex; align-items:center; gap:6px; padding:6px 13px; border-radius:99px; border:1.5px solid var(--border); background:var(--white); cursor:pointer; white-space:nowrap; transition:all 0.22s ease; flex-shrink:0; font-family:'Outfit',sans-serif; }
+        .car-tab .tab-label { font-size:12px; font-weight:600; color:var(--muted); transition:color 0.2s; max-width:90px; overflow:hidden; text-overflow:ellipsis; }
+        .car-tab .tab-dot { width:7px; height:7px; border-radius:50%; background:#D1D5DB; flex-shrink:0; transition:background 0.3s ease; }
+        .car-tab.active { border-color:var(--text); background:var(--text); }
+        .car-tab.active .tab-label { color:var(--white); }
+        .car-tab.active .tab-dot { background:#fff; }
+        .car-tab[data-nivel="laranja"] .tab-dot       { background:#FF7A00; }
+        .car-tab[data-nivel="amarelo-claro"] .tab-dot { background:#EDD835; }
+        .car-tab[data-nivel="amarelo"] .tab-dot       { background:#C8D400; }
+        .car-tab[data-nivel="verde"] .tab-dot         { background:#00C96A; }
+        .car-tab[data-nivel="azul"] .tab-dot          { background:#0088EE; }
+        .btn-add-car { width:32px; height:32px; border-radius:50%; border:1.5px dashed #D1D5DB; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:all 0.2s ease; font-family:'Outfit',sans-serif; }
+        .btn-add-car:hover { border-color:var(--text); background:var(--bg-card); }
+        .btn-add-car svg { transition:transform 0.2s ease; }
+        .btn-add-car:hover svg { transform:rotate(90deg); }
+
+        /* ══════════════════════════════════════════════════════
+           HERO — GAUGE CIRCULAR
+           Substitui os 5 dots por um gauge circular SVG animado.
+           - Anel de fundo cinzento
+           - Arco colorido que preenche conforme o nível (0→100%)
+           - Ícone de carro centrado com glow da cor do nível
+           - Label do nível abaixo com transição suave
+           - "Momento wow" ao atingir Proteção Total (nível azul)
+        ══════════════════════════════════════════════════════ */
+        .hero {
+            display:flex; flex-direction:column; align-items:center;
+            padding:4px 0 6px;
+        }
+
+        .gauge-wrap {
+            position:relative;
+            width:110px; height:110px;
+            margin-bottom:10px;
+        }
+
+        /* SVG do gauge */
+        .gauge-svg {
+            position:absolute; inset:0;
+            width:100%; height:100%;
+            transform:rotate(-90deg); /* 0° no topo */
+        }
+
+        /* Anel de fundo */
+        .gauge-track {
+            fill:none;
+            stroke:#EFEFEF;
+            stroke-width:10;
+        }
+
+        /* Arco de nível */
+        .gauge-arc {
+            fill:none;
+            stroke-width:10;
+            stroke-linecap:round;
+            transition: stroke-dashoffset 0.75s cubic-bezier(0.34,1.2,0.64,1),
+                        stroke 0.5s ease;
+        }
+
+        /* Stage central do carro */
+        .gauge-inner {
+            position:absolute;
+            inset:14px; /* margem para o anel */
+            border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            background:var(--white);
+            transition:background 0.5s ease, box-shadow 0.6s ease;
+        }
+
+        .car-neon {
+            position:relative; z-index:2;
+            transition:filter 0.55s ease;
+        }
+        .car-neon svg {
+            display:block;
+            transition:stroke 0.5s ease;
+        }
+
+        /* Níveis — cor do gauge-arc + glow do carro */
+        .nivel-cinzento .gauge-arc    { stroke:#D1D5DB; }
+        .nivel-cinzento .car-neon     { filter:none; }
+        .nivel-cinzento .car-neon svg { stroke:#6B7280; }
+        .nivel-cinzento .gauge-inner  { background:#F9FAFB; box-shadow:none; }
+        .nivel-cinzento .status-badge { background:#F3F4F6; color:#6B7280; }
+
+        .nivel-laranja .gauge-arc    { stroke:#FF7A00; }
+        .nivel-laranja .car-neon     { filter:drop-shadow(0 0 4px #FF7A00) drop-shadow(0 0 12px rgba(255,122,0,0.5)); }
+        .nivel-laranja .car-neon svg { stroke:#FF7A00; }
+        .nivel-laranja .gauge-inner  { background:#FFF8F2; box-shadow:0 0 24px rgba(255,122,0,0.14); }
+        .nivel-laranja .status-badge { background:#FFF0E6; color:#FF7A00; }
+
+        .nivel-amarelo-claro .gauge-arc    { stroke:#EDD835; }
+        .nivel-amarelo-claro .car-neon     { filter:drop-shadow(0 0 4px #EDD835) drop-shadow(0 0 12px rgba(237,216,53,0.5)); }
+        .nivel-amarelo-claro .car-neon svg { stroke:#C9A800; }
+        .nivel-amarelo-claro .gauge-inner  { background:#FEFCE8; box-shadow:0 0 24px rgba(237,216,53,0.18); }
+        .nivel-amarelo-claro .status-badge { background:#FEFCE8; color:#A88C00; }
+
+        .nivel-amarelo .gauge-arc    { stroke:#C8D400; }
+        .nivel-amarelo .car-neon     { filter:drop-shadow(0 0 4px #C8D400) drop-shadow(0 0 12px rgba(200,212,0,0.5)); }
+        .nivel-amarelo .car-neon svg { stroke:#A0A800; }
+        .nivel-amarelo .gauge-inner  { background:#FAFDE8; box-shadow:0 0 24px rgba(200,212,0,0.16); }
+        .nivel-amarelo .status-badge { background:#F5F8D6; color:#7A8000; }
+
+        .nivel-verde .gauge-arc    { stroke:#00C96A; }
+        .nivel-verde .car-neon     { filter:drop-shadow(0 0 4px #00C96A) drop-shadow(0 0 12px rgba(0,201,106,0.5)); }
+        .nivel-verde .car-neon svg { stroke:#009950; }
+        .nivel-verde .gauge-inner  { background:#EDFBF3; box-shadow:0 0 24px rgba(0,201,106,0.16); }
+        .nivel-verde .status-badge { background:#E0F8EC; color:#007A3D; }
+
+        .nivel-azul .gauge-arc    { stroke:#0088EE; }
+        .nivel-azul .car-neon     { filter:drop-shadow(0 0 4px #0088EE) drop-shadow(0 0 14px rgba(0,136,238,0.6)) drop-shadow(0 0 28px rgba(0,136,238,0.3)); }
+        .nivel-azul .car-neon svg { stroke:#0066CC; }
+        .nivel-azul .gauge-inner  { background:#EDF5FF; box-shadow:0 0 32px rgba(0,136,238,0.22); }
+        .nivel-azul .status-badge { background:#DDEFFF; color:#005BB5; }
+
+        /* Badge de status — pill abaixo do gauge */
+        .status-badge {
+            display:inline-flex; align-items:center; gap:6px;
+            padding:5px 14px;
+            border-radius:99px;
+            font-family: 'Raleway', sans-serif;
+            font-size:13px; font-weight:900;
+            letter-spacing:-0.2px;
+            transition:background 0.4s ease, color 0.4s ease;
+            margin-bottom:4px;
+        }
+        .status-badge-dot {
+            width:6px; height:6px; border-radius:50%;
+            background:currentColor;
+            opacity:0.6;
+        }
+
+        .status-desc {
+            font-size:12px; color:var(--muted);
+            text-align:center; max-width:260px;
+            line-height:1.5;
+        }
+
+        /* ══ MOMENTO WOW — Proteção Total ══
+           Quando atinge nível azul, estrelas/partículas animam à volta do gauge
+        ══ */
+        .wow-burst {
+            position:absolute; inset:0;
+            pointer-events:none;
+            border-radius:50%;
+            overflow:visible;
+        }
+        .wow-burst.active .burst-ring {
+            animation:burstRing 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+        }
+        @keyframes burstRing {
+            0%   { r:55; opacity:0.8; stroke-width:6; }
+            100% { r:78; opacity:0;   stroke-width:1; }
+        }
+        .wow-burst.active .burst-spark {
+            animation:burstSpark 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+        }
+        @keyframes burstSpark {
+            0%   { opacity:1; transform:translateY(0); }
+            100% { opacity:0; transform:translateY(-16px); }
+        }
+
+        /* ══ SCROLL ══ */
+        .scroll-content { flex:1; overflow-y:auto; padding:20px 24px 56px; }
+
+        /* ══ VENCIMENTO ══ */
+        .vencimento-card {
+            background:var(--bg-card); border-radius:16px;
+            padding:13px 16px; margin-bottom:22px;
+            display:flex; align-items:center; gap:12px;
+            border:1.5px solid var(--border);
+        }
+        .venc-icon { width:36px; height:36px; background:white; border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.05); flex-shrink:0; }
+        .venc-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:2px; }
+        .venc-input { font-family:'Outfit',sans-serif; font-size:14px; font-weight:600; color:var(--text); background:transparent; border:none; outline:none; cursor:pointer; width:100%; }
+        .alert-badge { margin-left:auto; font-size:10px; font-weight:700; background:#FEF2F2; color:#EF4444; padding:4px 10px; border-radius:99px; white-space:nowrap; display:none; }
+        .alert-badge.visible { display:block; }
+
+        .frac-btn { font-family:'Outfit',sans-serif; font-size:11px; font-weight:700; padding:5px 12px; border-radius:99px; border:1.5px solid var(--border); background:white; color:var(--muted); cursor:pointer; transition:all 0.2s ease; }
+        .frac-btn.active { border-color:var(--accent); background:var(--accent-bg); color:var(--accent); }
+        .prox-venc-item { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border-radius:10px; background:var(--bg-card); border:1.5px solid var(--border); }
+        .prox-venc-data { font-size:13px; font-weight:700; color:var(--text); }
+        .prox-venc-dias { font-size:11px; font-weight:700; color:var(--muted); }
+        .prox-venc-dias.urgente { color:#D97706; }
+        .prox-venc-dias.vencido { color:#EF4444; }
+
+        /* ══ GARANTIAS ══ */
+        .section-label { font-family:'Raleway',sans-serif; font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.14em; color:var(--muted); margin-bottom:10px; }
+
+        .garantia-item {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:13px 14px; border-radius:14px;
+            border:1.5px solid var(--border); margin-bottom:6px;
+            cursor:pointer;
+            background:white; user-select:none;
+            transition:border-color 0.22s ease, background 0.22s ease,
+                        transform 0.15s ease;
+            position:relative; overflow:hidden;
+        }
+        .garantia-item:active { transform:scale(0.985); }
+
+        /* Ripple effect ao clicar */
+        .garantia-ripple {
+            position:absolute;
+            border-radius:50%;
+            transform:scale(0);
+            background:rgba(30,107,140,0.12);
+            pointer-events:none;
+            animation:ripple 0.5s ease-out forwards;
+        }
+        @keyframes ripple {
+            to { transform:scale(4); opacity:0; }
+        }
+
+        .garantia-item.sel-rc            { border-color:rgba(255,122,0,0.4);   background:#FFF5EE; }
+        .garantia-item.sel-amarelo-claro { border-color:rgba(237,216,53,0.45); background:#FEFCE8; }
+        .garantia-item.sel-amarelo       { border-color:rgba(200,212,0,0.4);   background:#FAFDE8; }
+        .garantia-item.sel-verde         { border-color:rgba(0,201,106,0.35);  background:#EDFBF3; }
+        .garantia-item.sel-azul          { border-color:rgba(0,136,238,0.35);  background:#EDF5FF; }
+
+        .garantia-item.obrigatorio { border-color:rgba(255,122,0,0.25); background:#FFF8F2; }
+        .garantia-item.obrigatorio.sel-rc { border-color:rgba(255,122,0,0.45); background:#FFF0E6; }
+
+        .garantia-nome { font-size:14px; font-weight:600; color:var(--text); letter-spacing:-0.2px; }
+        .garantia-desc { font-size:12px; color:var(--muted); margin-top:2px; }
+
+        /* Check circle com spring animation */
+        .check-circle {
+            width:26px; height:26px; border-radius:50%;
+            border:1.5px solid #E0E4EA;
+            display:flex; align-items:center; justify-content:center;
+            flex-shrink:0; margin-left:14px;
+            background:white;
+            transition:background 0.25s ease, border-color 0.25s ease,
+                        transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .garantia-item:not(.obrigatorio):hover .check-circle { border-color:#C0C8D4; }
+
+        .check-svg { display:none; }
+        [class*="sel-"] .check-svg { display:block; }
+
+        .sel-rc .check-circle            { background:var(--laranja);       border-color:var(--laranja);       transform:scale(1.12); }
+        .sel-amarelo-claro .check-circle { background:#EDD835;              border-color:#EDD835;              transform:scale(1.12); }
+        .sel-amarelo .check-circle       { background:var(--amarelo);       border-color:var(--amarelo);       transform:scale(1.12); }
+        .sel-verde .check-circle         { background:var(--verde);         border-color:var(--verde);         transform:scale(1.12); }
+        .sel-azul .check-circle          { background:var(--azul);          border-color:var(--azul);          transform:scale(1.12); }
+
+        .divider { height:1px; background:var(--border); margin:12px 0; }
+
+        /* ══ HUBU TIP ══ */
+        .hubu-tip { background:var(--bg-card); border-radius:14px; padding:13px 15px; display:flex; align-items:flex-start; gap:10px; margin-top:8px; border:1.5px solid var(--border); }
+        .owl { font-size:18px; flex-shrink:0; margin-top:1px; }
+        .hubu-tip-text { font-size:12px; color:var(--muted); line-height:1.65; }
+        .hubu-tip-text strong { color:var(--text); font-weight:700; }
+
+        /* ══ DELETE CAR ══ */
+        .btn-delete-car { display:flex; align-items:center; gap:5px; background:none; border:none; font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; color:#EF4444; cursor:pointer; margin-top:6px; padding:0; opacity:0.7; }
+        .btn-delete-car:hover { opacity:1; }
+
+        /* ══ ALERTA CARD ══ */
+        .alerta-card { margin-top:20px; border-radius:16px; border:1.5px solid var(--border); background:var(--bg-card); overflow:hidden; }
+        .alerta-empty { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; cursor:pointer; transition:background 0.2s; }
+        .alerta-empty:hover { background:#F0F0F0; }
+        .alerta-empty-left { display:flex; align-items:center; gap:12px; }
+        .alerta-icon-wrap { width:36px; height:36px; background:white; border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.06); flex-shrink:0; }
+        .alerta-empty-title { font-size:14px; font-weight:600; color:var(--text); }
+        .alerta-empty-sub { font-size:11px; color:var(--muted); margin-top:1px; }
+        .alerta-add-btn { font-size:11px; font-weight:700; color:var(--accent); white-space:nowrap; display:flex; align-items:center; gap:4px; }
+        .alerta-active { display:none; }
+        .alerta-active.show { display:block; }
+        .alerta-active-header { display:flex; align-items:center; justify-content:space-between; padding:14px 16px 12px; border-bottom:1px solid var(--border); }
+        .alerta-active-left { display:flex; align-items:center; gap:10px; }
+        .alerta-status-dot { width:8px; height:8px; border-radius:50%; background:var(--verde); flex-shrink:0; box-shadow:0 0 6px rgba(0,201,106,0.5); }
+        .alerta-active-title { font-size:14px; font-weight:700; color:var(--text); }
+        .alerta-active-sub { font-size:11px; color:var(--muted); margin-top:1px; }
+        .btn-edit-alerta { font-size:11px; font-weight:700; color:var(--muted); background:none; border:none; cursor:pointer; font-family:'Outfit',sans-serif; }
+        .btn-edit-alerta:hover { color:var(--text); }
+        .alerta-summary { padding:10px 16px 14px; display:flex; flex-wrap:wrap; gap:6px; }
+        .alerta-chip { font-size:11px; font-weight:600; padding:4px 10px; border-radius:99px; background:white; border:1.5px solid var(--border); color:var(--text); }
+        .alerta-chip.canal { color:var(--verde); border-color:rgba(0,201,106,0.3); background:#EDFBF3; }
+        .alerta-chip.prazo { color:#0088EE; border-color:rgba(0,136,238,0.25); background:#EDF5FF; }
+
+        /* ══ MODAIS ══ */
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:200; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.25s ease; }
+        .modal-overlay.open { opacity:1; pointer-events:all; }
+        .modal-sheet { background:var(--white); border-radius:24px 24px 0 0; padding:26px 24px 44px; width:100%; max-width:420px; transform:translateY(40px); transition:transform 0.32s cubic-bezier(.22,.68,0,1.2); max-height:90vh; overflow-y:auto; }
+        .modal-overlay.open .modal-sheet { transform:translateY(0); }
+        .modal-handle { width:36px; height:4px; background:var(--border); border-radius:99px; margin:0 auto 20px; }
+        .modal-title { font-size:17px; font-weight:900; letter-spacing:-0.4px; margin-bottom:4px; }
+        .modal-subtitle { font-size:12px; color:var(--muted); margin-bottom:20px; line-height:1.55; }
+
+        .field-group { margin-bottom:16px; }
+        .field-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:6px; }
+        .field-input { width:100%; font-family:'Outfit',sans-serif; font-size:14px; font-weight:600; color:var(--text); background:var(--bg-card); border:1.5px solid var(--border); border-radius:12px; padding:12px 14px; outline:none; transition:border-color 0.2s ease; }
+        .field-input::placeholder { color:var(--muted); font-weight:400; }
+        .field-input:focus { border-color:var(--accent); }
+        .field-hint { font-size:11px; color:var(--muted); margin-top:4px; line-height:1.4; }
+
+        .toggle-group { display:flex; flex-direction:column; gap:2px; }
+        .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:13px 14px; border-radius:12px; background:var(--bg-card); border:1.5px solid transparent; transition:border-color 0.2s, background 0.2s; cursor:pointer; user-select:none; }
+        .toggle-row.on { background:white; border-color:var(--border); }
+        .toggle-row-left { display:flex; align-items:center; gap:10px; }
+        .toggle-icon { font-size:16px; width:20px; text-align:center; }
+        .toggle-label { font-size:14px; font-weight:600; color:var(--text); }
+        .toggle-switch { width:44px; height:26px; border-radius:99px; background:#E5E7EB; position:relative; transition:background 0.25s ease; flex-shrink:0; }
+        .toggle-switch::after { content:''; position:absolute; width:20px; height:20px; border-radius:50%; background:white; top:3px; left:3px; transition:transform 0.25s cubic-bezier(.22,.68,0,1.2); box-shadow:0 1px 4px rgba(0,0,0,0.2); }
+        .toggle-row.on .toggle-switch { background:var(--verde); }
+        .toggle-row.on .toggle-switch::after { transform:translateX(18px); }
+
+        .section-sep { height:1px; background:var(--border); margin:14px 0; }
+        .modal-actions { display:flex; gap:10px; margin-top:24px; }
+        .btn-cancel { flex:1; padding:14px; border-radius:12px; border:1.5px solid var(--border); background:transparent; color:var(--muted); font-family:'Outfit',sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
+        .btn-confirm { flex:2; padding:14px; border-radius:12px; border:none; background:var(--accent); color:var(--white); font-family:'Outfit',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:opacity 0.2s, background 0.2s; }
+        .btn-confirm:hover:not(:disabled) { background:#155270; }
+        .btn-confirm:disabled { opacity:0.35; cursor:default; }
+        .btn-desligar { width:100%; margin-top:10px; padding:13px; border-radius:12px; border:1.5px solid #FEE2E2; background:#FEF2F2; color:#EF4444; font-family:'Outfit',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:opacity 0.2s; }
+        .btn-desligar:hover { opacity:0.8; }
+
+        .entity-list { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+        .entity-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px; border:1.5px solid var(--border); background:var(--white); cursor:pointer; transition:all 0.2s ease; }
+        .entity-row:hover { background:var(--bg-card); }
+        .entity-row.active { border-color:var(--accent); background:var(--accent-bg); }
+        .entity-row-avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; color:white; flex-shrink:0; }
+        .entity-row-info { flex:1; min-width:0; }
+        .entity-row-name { font-size:14px; font-weight:700; color:var(--text); letter-spacing:-0.2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .entity-row-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+        .entity-row-actions { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+        .entity-row-icon-btn { width:30px; height:30px; display:flex; align-items:center; justify-content:center; background:transparent; border:none; border-radius:50%; cursor:pointer; color:var(--muted); transition:all 0.2s ease; }
+        .entity-row-icon-btn:hover { background:var(--bg-card); color:var(--text); }
+
+        .btn-add-entity { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px 14px; border:1.5px dashed #D1D5DB; background:transparent; border-radius:14px; font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; color:var(--accent); cursor:pointer; transition:all 0.2s ease; }
+        .btn-add-entity:hover { border-color:var(--accent); background:var(--accent-bg); }
+
+        .color-picker { display:flex; gap:8px; flex-wrap:wrap; }
+        .color-dot { width:32px; height:32px; border-radius:50%; cursor:pointer; border:2.5px solid transparent; transition:all 0.2s ease; }
+        .color-dot.selected { border-color:var(--text); transform:scale(1.08); }
+
+        .relation-row { display:flex; gap:6px; flex-wrap:wrap; }
+        .relation-chip { font-family:'Outfit',sans-serif; font-size:12px; font-weight:600; padding:7px 13px; border-radius:99px; background:var(--bg-card); border:1.5px solid var(--border); color:var(--muted); cursor:pointer; transition:all 0.2s ease; }
+        .relation-chip.selected { background:var(--accent-bg); border-color:var(--accent); color:var(--accent); }
+
+        .contacts-toggle { display:flex; align-items:center; justify-content:space-between; font-size:12px; font-weight:700; color:var(--muted); cursor:pointer; padding:8px 0; margin-top:4px; user-select:none; }
+        .contacts-toggle:hover { color:var(--text); }
+        .contacts-toggle .chev { transition:transform 0.25s ease; display:flex; }
+        .contacts-toggle.open .chev { transform:rotate(180deg); }
+        .contacts-block { max-height:0; overflow:hidden; transition:max-height 0.3s ease; }
+        .contacts-block.open { max-height:600px; }
+
+        .btn-delete-entity { display:flex; align-items:center; justify-content:center; gap:6px; width:100%; margin-top:10px; padding:11px; background:transparent; border:none; font-family:'Outfit',sans-serif; font-size:12px; font-weight:600; color:#EF4444; cursor:pointer; opacity:0.85; }
+        .btn-delete-entity:hover { opacity:1; }
+
+        .confirm-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:400; display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity 0.2s ease; }
+        .confirm-modal-overlay.open { opacity:1; pointer-events:all; }
+        .confirm-modal-box { background:var(--white); border-radius:20px; padding:24px; width:100%; max-width:320px; transform:scale(0.94); transition:transform 0.25s cubic-bezier(.22,.68,0,1.2); text-align:center; }
+        .confirm-modal-overlay.open .confirm-modal-box { transform:scale(1); }
+        .confirm-modal-icon { width:48px; height:48px; background:#FEF2F2; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; color:#EF4444; }
+        .confirm-modal-title { font-size:16px; font-weight:800; letter-spacing:-0.3px; color:var(--text); margin-bottom:6px; }
+        .confirm-modal-msg { font-size:13px; color:var(--muted); line-height:1.5; margin-bottom:20px; }
+        .confirm-modal-actions { display:flex; gap:8px; }
+        .confirm-btn-cancel { flex:1; padding:12px; background:var(--bg-card); border:1.5px solid var(--border); border-radius:12px; font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; color:var(--text); cursor:pointer; }
+        .confirm-btn-danger { flex:1; padding:12px; background:#EF4444; border:none; border-radius:12px; font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; color:white; cursor:pointer; }
+        .confirm-btn-danger:hover { background:#DC2626; }
+
+        .alerta-hint-pre { font-size:11px; color:var(--muted); background:var(--accent-bg); border:1px solid rgba(30,107,140,0.18); padding:8px 11px; border-radius:10px; margin-bottom:12px; line-height:1.5; }
+        .alerta-hint-pre strong { color:var(--accent); font-weight:700; }
+
+        .profile-banner { background:linear-gradient(135deg,#FFF8ED 0%,#FFF3E0 100%); border:1.5px solid #F5C97A; border-radius:14px; padding:12px 14px; margin-top:10px; display:flex; align-items:flex-start; gap:10px; }
+        .profile-banner-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+        .profile-banner-body { flex:1; min-width:0; }
+        .profile-banner-title { font-size:13px; font-weight:800; color:#92510A; letter-spacing:-0.2px; }
+        .profile-banner-msg { font-size:11px; color:#A8680E; margin-top:2px; line-height:1.4; }
+        .profile-banner-btn { margin-top:8px; display:inline-flex; align-items:center; gap:5px; font-family:'Outfit',sans-serif; font-size:11px; font-weight:700; color:#92510A; background:rgba(146,81,10,0.1); border:none; border-radius:99px; padding:5px 11px; cursor:pointer; }
+        .profile-banner-btn:hover { background:rgba(146,81,10,0.18); }
+
+        /* ══ WOW BANNER — aparece ao atingir nível azul ══ */
+        .wow-banner {
+            position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+            width:100%; max-width:420px;
+            padding:20px 24px 32px;
+            background:linear-gradient(180deg,#0066BB 0%,#0044AA 100%);
+            color:white;
+            z-index:300;
+            border-radius:24px 24px 0 0;
+            text-align:center;
+            pointer-events:none;
+            opacity:0;
+            transform:translateX(-50%) translateY(100%);
+            transition:transform 0.5s cubic-bezier(0.34,1.2,0.64,1), opacity 0.3s ease;
+        }
+        .wow-banner.show {
+            opacity:1;
+            transform:translateX(-50%) translateY(0);
+            pointer-events:all;
+        }
+        .wow-banner-emoji { font-size:36px; margin-bottom:8px; }
+        .wow-banner-title { font-size:20px; font-weight:900; letter-spacing:-0.5px; margin-bottom:6px; }
+        .wow-banner-sub { font-size:13px; opacity:0.75; line-height:1.5; margin-bottom:18px; }
+        .wow-banner-close {
+            padding:12px 28px; background:rgba(255,255,255,0.2);
+            border:1.5px solid rgba(255,255,255,0.3);
+            border-radius:12px; font-family:'Outfit',sans-serif;
+            font-size:14px; font-weight:700; color:white;
+            cursor:pointer; transition:background 0.2s;
+        }
+        .wow-banner-close:hover { background:rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body style="background-color: rgb(244, 244, 244);">
+<div class="app">
+
+    <!-- ══ STICKY TOP ══ -->
+    <div class="sticky-top">
+        <header>
+            <div class="logo" style="cursor:pointer;" onclick="window.location.href='hyybu-landing.html'" title="Voltar ao início">hubbu<span class="dot">.</span></div>
+            <div class="entity-chip" id="entityChip" onclick="openEntitiesModal()">
+                <div class="entity-avatar" id="entityChipAvatar" style="background: rgb(140, 91, 168);">F</div>
+                <div class="entity-chip-name" id="entityChipName">frf</div><span id="chipScore" style="font-size: 10px; font-weight: 700; color: var(--muted); margin-left: 2px;">17%</span>
+                <div class="entity-chip-arrow">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+            </div>
+        </header>
+
+        <div class="car-tabs-row" id="carTabsRow"><button class="car-tab active" data-nivel="azul"><span class="tab-dot"></span><span class="tab-label">O meu carro</span></button><button class="btn-add-car"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button></div>
+
+        <!-- ══ GAUGE HERO ══ -->
+        <div class="hero nivel-azul" id="hero">
+            <div class="gauge-wrap" id="gaugeWrap">
+                <!-- SVG gauge -->
+                <svg class="gauge-svg" viewBox="0 0 100 100">
+                    <circle class="gauge-track" cx="50" cy="50" r="42"></circle>
+                    <circle class="gauge-arc" id="gaugeArc" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9" style="stroke-dashoffset: 0;"></circle>
+                </svg>
+
+                <!-- Burst SVG para o wow -->
+                <svg class="wow-burst active" id="wowBurst" viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none;">
+                    <circle class="burst-ring" cx="50" cy="50" r="55" fill="none" stroke="#0088EE" opacity="0"></circle>
+                </svg>
+
+                <!-- Carro no centro -->
+                <div class="gauge-inner" id="gaugeInner">
+                    <div class="car-neon" id="carNeon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path>
+                            <circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badge de status -->
+            <div class="status-badge" id="statusBadge">
+                <div class="status-badge-dot"></div>
+                <span id="statusTitle">Proteção Total</span>
+            </div>
+            <p class="status-desc" id="statusDesc">Estás completamente protegido. Nível máximo.</p>
+        </div>
+    </div>
+
+    <!-- ══ SCROLL ══ -->
+    <div class="scroll-content">
+
+        <!-- VENCIMENTO -->
+        <div class="vencimento-card" style="flex-direction:column;gap:0;padding:0;overflow:hidden;">
+            <!-- Data anual -->
+            <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;">
+                <div class="venc-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+                <div style="flex:1">
+                    <div class="venc-label">Data de vencimento anual</div>
+                    <input type="date" id="dateInput" class="venc-input" onchange="checkDate()">
+                </div>
+                <div class="alert-badge" id="alertBadge"></div>
+            </div>
+            <!-- Fracionamento -->
+            <div style="border-top:1px solid var(--border);padding:11px 16px;display:flex;align-items:center;gap:10px;">
+                <div class="venc-label" style="margin-bottom:0;white-space:nowrap;">Fracionamento</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;" id="fracRow">
+                    <button class="frac-btn" data-frac="mensal" onclick="setFrac(this)">Mensal</button>
+                    <button class="frac-btn" data-frac="trimestral" onclick="setFrac(this)">Trimestral</button>
+                    <button class="frac-btn" data-frac="semestral" onclick="setFrac(this)">Semestral</button>
+                    <button class="frac-btn active" data-frac="anual" onclick="setFrac(this)">Anual</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GARANTIAS -->
+        <div class="section-label">As tuas coberturas</div>
+
+        <div class="garantia-item obrigatorio sel-rc" data-id="rc" onclick="toggle(this,event)">
+            <div><div class="garantia-nome">Responsabilidade Civil</div><div class="garantia-desc">Danos a terceiros — obrigatório por lei</div></div>
+            <div class="check-circle"><svg class="check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        </div>
+        <div class="divider"></div>
+        <div class="garantia-item sel-amarelo-claro" data-id="assist" data-nivel="amarelo-claro" onclick="toggle(this,event)">
+            <div><div class="garantia-nome">Assistência em Viagem</div><div class="garantia-desc">Reboque e apoio em caso de avaria</div></div>
+            <div class="check-circle"><svg class="check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        </div>
+        <div class="garantia-item sel-amarelo-claro" data-id="ocupantes" data-nivel="amarelo-claro" onclick="toggle(this,event)">
+            <div><div class="garantia-nome">Ocupantes da Viatura</div><div class="garantia-desc">Proteção para quem viaja contigo</div></div>
+            <div class="check-circle"><svg class="check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        </div>
+        <div class="garantia-item" data-id="juridica" data-nivel="amarelo-claro" onclick="toggle(this,event)">
+            <div><div class="garantia-nome">Proteção Jurídica</div><div class="garantia-desc">Defesa em processos após acidente</div></div>
+            <div class="check-circle"><svg class="check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        </div>
+        <div class="divider"></div>
+        <div class="garantia-item sel-amarelo" data-id="vidros" data-nivel="amarelo" onclick="toggle(this,event)">
+            <div><div class="garantia-nome">Quebra de Vidros</div><div class="garantia-desc">Para-brisas e janelas substituídos</div></div>
+            <div class="check-circle"><svg class="check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        </div>
+        <div class="divider"></div>
+        <div class="garantia-item sel-verde" data-id="furto" data-nivel="verde" onclick="toggle(this,event)">
+            <div><div class="garantia-nome">Furto ou Roubo</div><div class="garantia-desc">Se roubarem o carro, tens indemnização</div></div>
+            <div class="check-circle"><svg class="check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        </div>
+        <div class="garantia-item" data-id="incendio" data-nivel="verde" onclick="toggle(this,event)">
+            <div><div class="garantia-nome">Incêndio, Raio ou Explosão</div><div class="garantia-desc">Cobre destruição do carro por fogo</div></div>
+            <div class="check-circle"><svg class="check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        </div>
+        <div class="garantia-item" data-id="fenomenos" data-nivel="verde" onclick="toggle(this,event)">
+            <div><div class="garantia-nome">Fenómenos da Natureza</div><div class="garantia-desc">Tempestades, inundações, granizo</div></div>
+            <div class="check-circle"><svg class="check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        </div>
+        <div class="divider"></div>
+        <div class="garantia-item sel-azul" data-id="choque" data-nivel="azul" onclick="toggle(this,event)">
+            <div><div class="garantia-nome">Choque, Colisão ou Capotamento</div><div class="garantia-desc">Se bateres, o teu carro também fica coberto</div></div>
+            <div class="check-circle"><svg class="check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        </div>
+        <div class="garantia-item" data-id="vandalismo" data-nivel="azul" data-partial="true" onclick="toggle(this,event)">
+            <div><div class="garantia-nome">Atos de Vandalismo</div><div class="garantia-desc">Danos intencionais por terceiros cobertos</div></div>
+            <div class="check-circle"><svg class="check-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; margin-top:4px;">
+            <button class="btn-delete-car" id="btnDeleteCar" onclick="deleteCar()" style="display: none;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>
+                Remover este carro
+            </button>
+        </div>
+
+        <div class="hubu-tip">
+            <div class="hubu-tip-text" id="hubuTip" style="font-family:'Raleway',sans-serif; font-size:11px; font-weight:700; color:var(--muted); letter-spacing:0.02em; line-height:1.6;">Todos os teus seguros. Uma plataforma. Zero confusão.</div>
+        </div>
+
+        <!-- ALERTA -->
+        <div class="alerta-card" id="alertaCard">
+            <div class="alerta-empty" id="alertaEmpty" onclick="openAlertaModal()" style="display: flex;">
+                <div class="alerta-empty-left">
+                    <div class="alerta-icon-wrap">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    </div>
+                    <div>
+                        <div class="alerta-empty-title">Alertas de vencimento</div>
+                        <div class="alerta-empty-sub">Recebe avisos antes de o seguro expirar</div>
+                    </div>
+                </div>
+                <div class="alerta-add-btn">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Criar
+                </div>
+            </div>
+            <div class="alerta-active" id="alertaActive">
+                <div class="alerta-active-header">
+                    <div class="alerta-active-left">
+                        <div class="alerta-status-dot"></div>
+                        <div><div class="alerta-active-title">Alertas ativos</div><div class="alerta-active-sub" id="alertaActiveSub">—</div></div>
+                    </div>
+                    <button class="btn-edit-alerta" onclick="openAlertaModal()">Editar</button>
+                </div>
+                <div class="alerta-summary" id="alertaSummary"></div>
+            </div>
+        </div>
+
+    </div><!-- /scroll -->
+
+    <!-- FOOTER -->
+    <div style="text-align:center; padding: 16px 24px 32px; opacity:0.6;">
+        <div style="font-size:11px; font-weight:700; color:#1E6B8C; font-family:'Outfit',sans-serif; letter-spacing:-0.5px;">hubbu.</div>
+        <div style="font-size:10px; color:#D1D5DB; margin-top:4px; line-height:1.6;">
+            © 2026 Hubbu. Todos os direitos reservados.<br>
+            Plataforma de gestão de seguros. Não constitui aconselhamento financeiro.
+        </div>
+    </div>
+</div><!-- /app -->
+
+<!-- ══ WOW BANNER ══ -->
+<div class="wow-banner" id="wowBanner">
+    <div class="wow-banner-emoji">🏆</div>
+    <div class="wow-banner-title">Proteção Total!</div>
+    <div class="wow-banner-sub">O teu carro está coberto contra praticamente tudo. Parabéns!</div>
+    <button class="wow-banner-close" onclick="closeWow()">Excelente 🎉</button>
+</div>
+
+<!-- ══ MODAL VIATURA ══ -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-title">Adicionar viatura</div>
+        <div class="field-group">
+            <div class="field-label">Marca / Modelo</div>
+            <input type="text" id="inputMarca" class="field-input" placeholder="ex: BMW Série 3, Golf, Clio…" oninput="validateCarModal()">
+        </div>
+        <div class="field-group">
+            <div class="field-label">Matrícula</div>
+            <input type="text" id="inputMatricula" class="field-input" placeholder="ex: 00-AA-00" maxlength="9" oninput="formatMatricula(this); validateCarModal()">
+            <div class="field-hint">Opcional se preencheres a marca</div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeCarModal()">Cancelar</button>
+            <button class="btn-confirm" id="btnConfirmCar" onclick="addCar()" disabled="">Adicionar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODAL ALERTAS ══ -->
+<div class="modal-overlay" id="alertaOverlay" onclick="handleAlertaOverlayClick(event)">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-title">Alertas de vencimento</div>
+        <div class="modal-subtitle">Escolhe quando e como queres ser avisado antes do seguro vencer.</div>
+
+        <!-- Próximos vencimentos -->
+        <div id="proxVencWrap" style="margin-bottom:16px;display:none;">
+            <div class="field-label" style="margin-bottom:8px;">Próximos vencimentos</div>
+            <div id="proxVencList" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+        <div class="section-sep" id="proxVencSep" style="display:none;"></div>
+
+        <div id="alertaEntityHint" class="alerta-hint-pre" style="display:none;"></div>
+        <div class="field-label">Canais de notificação</div>
+        <div class="toggle-group" style="margin-bottom:6px;">
+            <div class="toggle-row" id="tr-email" onclick="toggleAlertRow(this,'email')">
+                <div class="toggle-row-left"><span class="toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></span><div><div class="toggle-label">Email</div></div></div>
+                <div class="toggle-switch"></div>
+            </div>
+            <div id="emailInputWrap" style="display:none; padding:0 4px 6px;">
+                <input type="email" id="alertaEmail" class="field-input" placeholder="o-teu@email.com" style="margin-top:6px;">
+            </div>
+            <div class="toggle-row" id="tr-sms" onclick="toggleAlertRow(this,'sms')">
+                <div class="toggle-row-left"><span class="toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><div><div class="toggle-label">SMS</div></div></div>
+                <div class="toggle-switch"></div>
+            </div>
+            <div id="smsInputWrap" style="display:none; padding:0 4px 6px;">
+                <input type="tel" id="alertaSms" class="field-input" placeholder="+351 9XX XXX XXX" style="margin-top:6px;">
+            </div>
+            <div class="toggle-row" id="tr-whatsapp" onclick="toggleAlertRow(this,'whatsapp')">
+                <div class="toggle-row-left"><span class="toggle-icon"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="16" fill="#25D366"/><path d="M23.5 8.5A10.4 10.4 0 0 0 16 5.5C10.2 5.5 5.5 10.2 5.5 16c0 1.8.5 3.6 1.4 5.2L5.5 26.5l5.4-1.4c1.5.8 3.2 1.3 4.9 1.3h.1c5.8 0 10.5-4.7 10.5-10.5 0-2.8-1.1-5.4-3-7.4zm-7.5 16.1h-.1c-1.5 0-3-.4-4.3-1.1l-.3-.2-3.2.8.9-3.1-.2-.3A8.6 8.6 0 0 1 7.4 16c0-4.7 3.9-8.6 8.6-8.6 2.3 0 4.5.9 6.1 2.5a8.5 8.5 0 0 1 2.5 6.1c0 4.8-3.8 8.6-8.6 8.6zm4.7-6.4c-.3-.1-1.6-.8-1.8-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1-.2.2-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.3 8 8 0 0 1-1.5-1.9c-.2-.3 0-.5.1-.6l.5-.5.3-.5v-.5l-.9-2.1c-.2-.5-.5-.4-.7-.4h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.3 3.2c.1.2 2.2 3.4 5.4 4.7.7.3 1.3.5 1.8.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2.1-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4z" fill="white"/></svg></span><div><div class="toggle-label">WhatsApp</div></div></div>
+                <div class="toggle-switch"></div>
+            </div>
+            <div id="whatsappInputWrap" style="display:none; padding:0 4px 6px;">
+                <input type="tel" id="alertaWhatsapp" class="field-input" placeholder="+351 9XX XXX XXX" style="margin-top:6px;">
+            </div>
+        </div>
+        <div class="section-sep"></div>
+        <div class="field-label" style="margin-bottom:8px;">Quando queres ser avisado?</div>
+        <div class="toggle-group">
+            <div class="toggle-row" id="tr-30" onclick="toggleAlertRow(this,'d30')"><div class="toggle-row-left"><span class="toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><div><div class="toggle-label">30 dias antes</div></div></div><div class="toggle-switch"></div></div>
+            <div class="toggle-row" id="tr-7" onclick="toggleAlertRow(this,'d7')"> <div class="toggle-row-left"><span class="toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><div><div class="toggle-label">7 dias antes</div></div></div><div class="toggle-switch"></div></div>
+            <div class="toggle-row" id="tr-3" onclick="toggleAlertRow(this,'d3')"> <div class="toggle-row-left"><span class="toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><div><div class="toggle-label">3 dias antes</div></div></div><div class="toggle-switch"></div></div>
+            <div class="toggle-row" id="tr-1" onclick="toggleAlertRow(this,'d1')"> <div class="toggle-row-left"><span class="toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><div><div class="toggle-label">Dia anterior</div></div></div><div class="toggle-switch"></div></div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeAlertaModal()">Cancelar</button>
+            <button class="btn-confirm" id="btnConfirmAlerta" onclick="saveAlerta()" disabled="">Guardar alertas</button>
+        </div>
+        <button class="btn-desligar" id="btnDesligar" style="display:none;" onclick="disableAlerta()">Desligar todos os alertas</button>
+    </div>
+</div>
+
+<!-- ══ MODAL ENTIDADES ══ -->
+<div class="modal-overlay" id="entitiesOverlay" onclick="handleEntitiesOverlayClick(event)">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+            <div class="modal-title" style="margin-bottom:0;">As tuas pessoas</div>
+            <button onclick="closeEntitiesModal()" style="width:30px;height:30px;border-radius:50%;border:none;background:var(--bg-card);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="modal-subtitle">Gere os seguros de toda a família a partir de um único sítio.</div>
+        <div class="entity-list" id="entitiesList"></div>
+        <button class="btn-add-entity" onclick="openEntityFormModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Adicionar familiar
+        </button>
+        <div style="text-align:center; margin-top:14px;">
+            <a href="hubbu-landing-v14.html" style="font-size:12px;font-weight:600;color:var(--muted);text-decoration:none;">← Voltar à página inicial</a>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODAL FORM ENTIDADE ══ -->
+<div class="modal-overlay" id="entityFormOverlay" onclick="handleEntityFormOverlayClick(event)">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+            <div class="modal-title" id="entityFormTitle" style="margin-bottom:0;">Adicionar familiar</div>
+            <button onclick="closeEntityFormModal()" style="width:30px;height:30px;border-radius:50%;border:none;background:var(--bg-card);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="modal-subtitle">Dados básicos para começares a gerir os seguros desta pessoa.</div>
+        <div class="field-group"><div class="field-label">Nome</div><input type="text" id="inputEntityName" class="field-input" placeholder="ex: João, Mãe, Filho" oninput="validateEntityForm()" maxlength="40"></div>
+        <div class="field-group">
+            <div class="field-label">Relação <span style="text-transform:none;font-weight:500;color:#9CA3AF;">(opcional)</span></div>
+            <div class="relation-row" id="relationRow">
+                <div class="relation-chip" data-rel="eu" onclick="selectRelation(this)">Eu</div>
+                <div class="relation-chip" data-rel="conjuge" onclick="selectRelation(this)">Cônjuge</div>
+                <div class="relation-chip" data-rel="filho" onclick="selectRelation(this)">Filho/a</div>
+                <div class="relation-chip" data-rel="pai" onclick="selectRelation(this)">Pai/Mãe</div>
+                <div class="relation-chip" data-rel="outro" onclick="selectRelation(this)">Outro</div>
+            </div>
+        </div>
+        <div class="field-group"><div class="field-label">Cor</div><div class="color-picker" id="colorPicker"></div></div>
+        <div class="contacts-toggle" id="contactsToggle" onclick="toggleContactsBlock()">
+            <span>Contactos para alertas <span style="font-weight:500;color:#9CA3AF;">(opcional)</span></span>
+            <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </div>
+        <div class="contacts-block" id="contactsBlock">
+            <div class="field-hint" style="margin-bottom:10px;">Definir aqui evita repetir em cada apólice.</div>
+            <div class="field-group"><div class="field-label">Email</div><input type="email" id="inputEntityEmail" class="field-input" placeholder="email@exemplo.pt"></div>
+            <div class="field-group"><div class="field-label">Telemóvel</div><input type="tel" id="inputEntityPhone" class="field-input" placeholder="+351 9XX XXX XXX"></div>
+        </div>
+        <div class="contacts-toggle" id="profileToggle" onclick="toggleProfileBlock()">
+            <span>Dados para cotação <span style="font-weight:500;color:#9CA3AF;">(opcional)</span></span>
+            <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+        </div>
+        <div class="contacts-block" id="profileBlock">
+            <div class="field-hint" style="margin-bottom:10px;">Necessários para pedir cotação. Podes preencher agora ou mais tarde.</div>
+            <div style="display:flex;gap:8px;">
+                <div class="field-group" style="flex:1;margin-bottom:0;"><div class="field-label">NIF</div><input type="text" id="inputEntityNif" class="field-input" placeholder="123456789" maxlength="9" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+                <div class="field-group" style="flex:1;margin-bottom:0;"><div class="field-label">Data de nascimento</div><input type="date" id="inputEntityDob" class="field-input"></div>
+            </div>
+            <div class="field-group" style="margin-top:10px;"><div class="field-label">Morada</div><input type="text" id="inputEntityAddress" class="field-input" placeholder="Rua, número, andar"></div>
+            <div class="field-group"><div class="field-label">Código postal</div><input type="text" id="inputEntityPostal" class="field-input" placeholder="1234-567" maxlength="8"></div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeEntityFormModal()">Cancelar</button>
+            <button class="btn-confirm" id="btnConfirmEntity" onclick="saveEntity()" disabled="">Guardar</button>
+        </div>
+        <button class="btn-delete-entity" id="btnDeleteEntity" style="display:none;" onclick="deleteEntity()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>
+            Remover esta pessoa
+        </button>
+    </div>
+</div>
+
+<!-- ══ CONFIRM ══ -->
+<div class="confirm-modal-overlay" id="confirmOverlay">
+    <div class="confirm-modal-box">
+        <div class="confirm-modal-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6M14 11v6"></path></svg></div>
+        <div class="confirm-modal-title" id="confirmTitle">Tens a certeza?</div>
+        <div class="confirm-modal-msg" id="confirmMsg"></div>
+        <div class="confirm-modal-actions">
+            <button class="confirm-btn-cancel" id="confirmCancel">Cancelar</button>
+            <button class="confirm-btn-danger" id="confirmOk">Remover</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   HUBBU MVP v11
+
+   Melhorias vs v10:
+   1. GAUGE CIRCULAR — substitui 5 dots, anima com spring ao mudar nível
+   2. RIPPLE nos garantia items ao clicar
+   3. CHECK CIRCLE com spring bounce ao ativar
+   4. WOW BANNER ao atingir Proteção Total (nível azul)
+   5. BURST RING animado no gauge ao atingir nível azul
+   6. Status badge em pill colorido (vs texto simples)
+   7. Transições de hero mais suaves
+══════════════════════════════════════════════════════════════ */
+
+/* ── Gauge config ── */
+const GAUGE_CIRCUMFERENCE = 2 * Math.PI * 42; // r=42 → ~263.9
+const NIVEL_PCT = {
+    cinzento:       0,
+    laranja:        0.2,
+    'amarelo-claro':0.4,
+    amarelo:        0.6,
+    verde:          0.8,
+    azul:           1.0
+};
+
+let prevNivel = 'cinzento'; // para detectar transição para azul
+
+function setGauge(nivel) {
+    const pct = NIVEL_PCT[nivel] || 0;
+    const offset = GAUGE_CIRCUMFERENCE * (1 - pct);
+    const arc = document.getElementById('gaugeArc');
+    arc.style.strokeDashoffset = offset;
+
+    // Bounce extra ao subir de nível
+    if (pct > (NIVEL_PCT[prevNivel] || 0)) {
+        arc.style.transition = 'stroke-dashoffset 0.75s cubic-bezier(0.34,1.4,0.64,1), stroke 0.5s ease';
+    } else {
+        arc.style.transition = 'stroke-dashoffset 0.55s cubic-bezier(0.22,0.68,0,1.2), stroke 0.5s ease';
+    }
+
+    // Momento WOW — Proteção Total
+    if (nivel === 'azul' && prevNivel !== 'azul') {
+        triggerWow();
+    }
+
+    prevNivel = nivel;
+}
+
+function triggerWow() {
+    // Burst ring no gauge
+    const burst = document.getElementById('wowBurst');
+    burst.classList.remove('active');
+    void burst.offsetWidth; // reflow
+    burst.classList.add('active');
+
+    // Banner bottom
+    setTimeout(() => {
+        if (!sessionStorage.getItem('hubbu_wow_shown')) {
+            sessionStorage.setItem('hubbu_wow_shown', '1');
+            document.getElementById('wowBanner').classList.add('show');
+        }
+    }, 800);
+}
+
+function closeWow() {
+    document.getElementById('wowBanner').classList.remove('show');
+}
+
+/* ── Ripple nos garantia items ── */
+function addRipple(el, event) {
+    const rect = el.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size/2;
+    const y = event.clientY - rect.top - size/2;
+    const ripple = document.createElement('div');
+    ripple.className = 'garantia-ripple';
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
+    el.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 500);
+}
+
+/* ════════════════════════════════════════════
+   DADOS E LÓGICA
+════════════════════════════════════════════ */
+const STORAGE_KEY = 'hubbu_entities_v1';
+const ACTIVE_KEY  = 'hubbu_active_entity_v1';
+const AUTO_KEY    = id => 'hubbu_auto_' + id;
+
+const ENTITY_COLORS = ['#1E6B8C','#5B6B95','#2A8C7E','#C9A356','#B96A5C','#8C5BA8','#6B7280','#0D0D0D'];
+const RELATION_LABELS = { eu:'Eu', conjuge:'Cônjuge', filho:'Filho/a', pai:'Pai/Mãe', outro:'Outro' };
+
+function loadEntities() {
+    try { const raw=localStorage.getItem(STORAGE_KEY); if(raw){const arr=JSON.parse(raw);if(Array.isArray(arr)&&arr.length)return arr;} } catch(e) {}
+    const def=[{id:'e'+Date.now(),name:'Eu',relation:'eu',color:ENTITY_COLORS[0],email:'',phone:'',ramos:{auto:false,lar:false,vida:false,saude:false,bike:false,pet:false}}];
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(def)); return def;
+}
+function saveEntities() { localStorage.setItem(STORAGE_KEY,JSON.stringify(entities)); }
+function getActiveId() { return localStorage.getItem(ACTIVE_KEY)||entities[0].id; }
+function setActiveId(id) { localStorage.setItem(ACTIVE_KEY,id); }
+function getInitials(name) { if(!name)return'?'; const p=name.trim().split(/\s+/).filter(Boolean); return p.length===1?p[0][0].toUpperCase():(p[0][0]+p[p.length-1][0]).toUpperCase(); }
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+let entities=loadEntities(), activeEntityId=getActiveId();
+if(!entities.find(e=>e.id===activeEntityId)){activeEntityId=entities[0].id;setActiveId(activeEntityId);}
+
+const SELECTED_KEY='hubbu_selected_entities_v1';
+function loadSelected(){try{const r=localStorage.getItem(SELECTED_KEY);if(r){const a=JSON.parse(r);if(Array.isArray(a)&&a.length)return a;}}catch(e){}return[activeEntityId];}
+function saveSelected(arr){localStorage.setItem(SELECTED_KEY,JSON.stringify(arr));}
+let selectedEntityIds=loadSelected().filter(id=>entities.find(e=>e.id===id));
+if(!selectedEntityIds.length)selectedEntityIds=[entities[0].id];
+if(!entities.find(e=>e.id===activeEntityId)){activeEntityId=entities[0].id;setActiveId(activeEntityId);}
+let editingEntityId=null,formColor=ENTITY_COLORS[0],formRelation=null;
+
+function newCarState(marca,matricula) {
+    const d=new Date(); d.setMonth(d.getMonth()+2);
+    return{marca,matricula,rc:false,assist:false,ocupantes:false,juridica:false,vidros:false,furto:false,incendio:false,fenomenos:false,choque:false,vandalismo:false,vencimento:d.toISOString().split('T')[0],alerta:null};
+}
+
+function loadAuto() {
+    try{const raw=localStorage.getItem(AUTO_KEY(activeEntityId));if(raw){const d=JSON.parse(raw);if(d&&Array.isArray(d.cars)&&d.cars.length)return{cars:d.cars,activeIdx:d.activeIdx||0};}}catch(e){}
+    return{cars:[newCarState('O meu carro','')],activeIdx:0};
+}
+
+function saveAuto() {
+    localStorage.setItem(AUTO_KEY(activeEntityId),JSON.stringify({cars,activeIdx}));
+    const ent=entities.find(e=>e.id===activeEntityId);
+    if(ent){const h=cars.some(c=>c.rc);if(ent.ramos.auto!==h){ent.ramos.auto=h;saveEntities();}}
+}
+
+let{cars,activeIdx}=loadAuto();
+
+const cfg={
+    cinzento:{title:'Sem Cobertura',desc:'Seleciona a Responsabilidade Civil para começares.',tip:'<strong>O seguro obrigatório só protege os outros.</strong> Se bateres, os danos no teu carro ficam por tua conta.'},
+    laranja:{title:'Proteção Mínima',desc:'Bom começo. Adiciona assistência para subir de nível.',tip:'<strong>Só tens o mínimo legal.</strong> Adiciona assistência em viagem — cobre reboques e avarias.'},
+    'amarelo-claro':{title:'Proteção Elementar',desc:'Quase a sair do laranja. Adiciona Quebra de Vidros.',tip:'<strong>Bom começo!</strong> Um para-brisas pode custar €400 — considera adicionar a cobertura de vidros.'},
+    amarelo:{title:'Proteção Básica',desc:'Bem encaminhado. Adiciona furto ou incêndio.',tip:'<strong>Já tens cobertura de vidros.</strong> Falta protegeres contra furto e fenómenos naturais.'},
+    verde:{title:'Bem Protegido',desc:'Falta só o choque para chegares ao máximo.',tip:'<strong>Excelente cobertura!</strong> O choque cobre os danos no teu carro se bateres — o último passo.'},
+    azul:{title:'Proteção Total',desc:'Estás completamente protegido. Nível máximo.',tip:'<strong>Proteção máxima atingida.</strong> O teu carro está coberto contra praticamente tudo. 🏆'}
+};
+
+function calcNivel(s){
+    if(!s.rc)return'cinzento';
+    if(!(s.assist||s.ocupantes||s.juridica))return'laranja';
+    if(!s.vidros)return'amarelo-claro';
+    if(!(s.furto||s.incendio||s.fenomenos))return'amarelo';
+    if(!s.choque)return'verde';
+    return'azul';
+}
+
+/* ── Render ── */
+function renderTabs(){
+    const row=document.getElementById('carTabsRow');row.innerHTML='';
+    cars.forEach((car,i)=>{
+        const nivel=calcNivel(car);
+        const label=car.matricula?car.matricula.toUpperCase():(car.marca||'Viatura '+(i+1));
+        const tab=document.createElement('button');
+        tab.className='car-tab'+(i===activeIdx?' active':'');
+        tab.dataset.nivel=nivel;
+        tab.innerHTML=`<span class="tab-dot"></span><span class="tab-label">${label}</span>`;
+        tab.onclick=()=>switchCar(i);
+        row.appendChild(tab);
+    });
+    // Botão editar carro ativo
+    const editBtn=document.createElement('button');
+    editBtn.style.cssText='width:32px;height:32px;border-radius:50%;border:1.5px solid #E5E7EB;background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all 0.2s ease;';
+    editBtn.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
+    editBtn.title='Editar viatura';
+    editBtn.onclick=openEditCarModal;
+    row.appendChild(editBtn);
+    const btn=document.createElement('button'); btn.className='btn-add-car';
+    btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+    btn.onclick=openCarModal; row.appendChild(btn);
+    document.getElementById('btnDeleteCar').style.display=cars.length>1?'flex':'none';
+}
+
+function openEditCarModal(){
+    const car=cars[activeIdx];
+    document.getElementById('inputMarca').value=car.marca||'';
+    document.getElementById('inputMatricula').value=car.matricula||'';
+    document.getElementById('btnConfirmCar').textContent='Guardar';
+    document.getElementById('btnConfirmCar').onclick=saveEditCar;
+    document.getElementById('btnConfirmCar').disabled=false;
+    document.querySelector('#modalOverlay .modal-title').textContent='Editar viatura';
+    document.getElementById('modalOverlay').classList.add('open');
+    setTimeout(()=>document.getElementById('inputMarca').focus(),300);
+}
+
+function saveEditCar(){
+    const marca=document.getElementById('inputMarca').value.trim();
+    const matricula=document.getElementById('inputMatricula').value.trim();
+    if(!marca&&!matricula)return;
+    cars[activeIdx].marca=marca;
+    cars[activeIdx].matricula=matricula;
+    saveAuto(); closeCarModal();
+    document.getElementById('btnConfirmCar').textContent='Adicionar';
+    document.getElementById('btnConfirmCar').onclick=addCar;
+    document.querySelector('#modalOverlay .modal-title').textContent='Adicionar viatura';
+    renderTabs(); render();
+}
+
+function renderGarantias(){
+    const car=cars[activeIdx];
+    document.querySelectorAll('.garantia-item').forEach(el=>{
+        const id=el.dataset.id; const nivel=el.dataset.nivel||'rc';
+        el.className=el.className.replace(/\bsel-[\w-]+\b/g,'').trim();
+        if(el.classList.contains('obrigatorio')&&!el.classList.contains('garantia-item'))el.classList.add('garantia-item');
+        if(id==='rc'){if(car.rc)el.classList.add('sel-rc');}
+        else{if(car[id])el.classList.add(`sel-${nivel}`);}
+    });
+}
+
+function renderHero(){
+    const car=cars[activeIdx]; const nivel=calcNivel(car);
+    document.getElementById('hero').className=`hero nivel-${nivel}`;
+    document.getElementById('statusTitle').textContent=cfg[nivel].title;
+    document.getElementById('statusDesc').textContent=cfg[nivel].desc;
+    document.getElementById('hubuTip').innerHTML=cfg[nivel].tip;
+    document.getElementById('dateInput').value=car.vencimento;
+    setGauge(nivel);
+    checkDate();
+    renderFracButtons();
+    renderProxVenc();
+}
+
+function renderAlerta(){
+    const car=cars[activeIdx];
+    const empty=document.getElementById('alertaEmpty'), active=document.getElementById('alertaActive');
+    if(!car.alerta){empty.style.display='flex';active.classList.remove('show');return;}
+    empty.style.display='none'; active.classList.add('show');
+    const canaisAtivos=Object.entries(car.alerta.canais).filter(([,v])=>v).map(([k])=>k);
+    const prazosAtivos=Object.entries(car.alerta.prazos).filter(([,v])=>v);
+    const prazoLabels={d30:'30 dias',d7:'7 dias',d3:'3 dias',d1:'Dia anterior'};
+    document.getElementById('alertaActiveSub').textContent=canaisAtivos.map(c=>c.charAt(0).toUpperCase()+c.slice(1)).join(', ')+' · '+prazosAtivos.map(([k])=>prazoLabels[k]).join(', ');
+    const summary=document.getElementById('alertaSummary'); summary.innerHTML='';
+    canaisAtivos.forEach(c=>{const ch=document.createElement('span');ch.className='alerta-chip canal';const icons={email:'✉',sms:'💬',whatsapp:'🟢'};ch.textContent=icons[c]+' '+c.charAt(0).toUpperCase()+c.slice(1);summary.appendChild(ch);});
+    prazosAtivos.forEach(([k])=>{const ch=document.createElement('span');ch.className='alerta-chip prazo';ch.textContent='🗓 '+prazoLabels[k];summary.appendChild(ch);});
+}
+
+function render(){renderEntityChip();renderTabs();renderGarantias();renderHero();renderAlerta();saveAuto();}
+function switchCar(idx){activeIdx=idx;render();}
+
+function toggle(el,event){
+    addRipple(el, event);
+    const id=el.dataset.id; cars[activeIdx][id]=!cars[activeIdx][id]; render();
+}
+
+function setFrac(btn){
+    document.querySelectorAll('.frac-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    cars[activeIdx].fracionamento=btn.dataset.frac;
+    saveAuto(); renderProxVenc();
+}
+
+function checkDate(){
+    const v=document.getElementById('dateInput').value;
+    const b=document.getElementById('alertBadge');
+    cars[activeIdx].vencimento=v; saveAuto();
+    if(!v){b.classList.remove('visible');document.getElementById('proxVencList').innerHTML='';return;}
+    const dias=Math.ceil((new Date(v)-new Date())/86400000);
+    b.classList.toggle('visible',dias>=0&&dias<=30);
+    b.textContent=(dias>=0&&dias<=30)?`⚠️ ${dias} dias`:'';
+    renderProxVenc();
+}
+
+function renderProxVenc(){
+    const car=cars[activeIdx];
+    const list=document.getElementById('proxVencList');
+    const wrap=document.getElementById('proxVencWrap');
+    if(!car.vencimento){list.innerHTML='';wrap.style.display='none';return;}
+    wrap.style.display='block';
+
+    const frac=car.fracionamento||'anual';
+    const mesesMap={mensal:1,trimestral:3,semestral:6,anual:12};
+    const meses=mesesMap[frac]||12;
+
+    // Calcula próximas 3 datas a partir da data base
+    const base=new Date(car.vencimento+'T12:00:00');
+    const hoje=new Date(); hoje.setHours(0,0,0,0);
+    const datas=[];
+
+    // Encontra a próxima data futura e as 2 seguintes
+    let d=new Date(base);
+    // Avança até encontrar data futura
+    while(d<=hoje) { d.setMonth(d.getMonth()+meses); }
+    for(let i=0;i<3;i++){
+        datas.push(new Date(d));
+        d=new Date(d); d.setMonth(d.getMonth()+meses);
+    }
+
+    list.innerHTML='';
+    datas.forEach((data,i)=>{
+        const dias=Math.ceil((data-hoje)/86400000);
+        const fmt=data.toLocaleDateString('pt-PT',{day:'2-digit',month:'2-digit',year:'numeric'});
+        const diasClass=dias<=30?'urgente':dias<0?'vencido':'';
+        const diasLabel=dias===0?'Hoje':dias<0?`Vencido há ${Math.abs(dias)}d`:`${dias} dias`;
+        const item=document.createElement('div');
+        item.className='prox-venc-item';
+        item.innerHTML=`<div class="prox-venc-data">${i===0?'🔜 ':''}<strong>${fmt}</strong></div><div class="prox-venc-dias ${diasClass}">${diasLabel}</div>`;
+        list.appendChild(item);
+    });
+}
+
+function renderFracButtons(){
+    const frac=cars[activeIdx].fracionamento||'anual';
+    document.querySelectorAll('.frac-btn').forEach(b=>{
+        b.classList.toggle('active',b.dataset.frac===frac);
+    });
+}
+
+function deleteCar(){if(cars.length<=1)return;cars.splice(activeIdx,1);activeIdx=Math.max(0,activeIdx-1);render();}
+
+function openCarModal(){document.getElementById('inputMarca').value='';document.getElementById('inputMatricula').value='';document.getElementById('btnConfirmCar').disabled=true;document.getElementById('modalOverlay').classList.add('open');setTimeout(()=>document.getElementById('inputMarca').focus(),300);}
+function closeCarModal(){document.getElementById('modalOverlay').classList.remove('open');}
+function handleOverlayClick(e){if(e.target===document.getElementById('modalOverlay'))closeCarModal();}
+function validateCarModal(){const m=document.getElementById('inputMarca').value.trim(),p=document.getElementById('inputMatricula').value.trim();document.getElementById('btnConfirmCar').disabled=!(m||p);}
+function formatMatricula(input){let v=input.value.replace(/[^a-zA-Z0-9]/g,'').toUpperCase();if(v.length>2)v=v.slice(0,2)+'-'+v.slice(2);if(v.length>5)v=v.slice(0,5)+'-'+v.slice(5);input.value=v.slice(0,9);}
+function addCar(){const marca=document.getElementById('inputMarca').value.trim(),mat=document.getElementById('inputMatricula').value.trim();if(!marca&&!mat)return;cars.push(newCarState(marca,mat));activeIdx=cars.length-1;closeCarModal();render();}
+
+const alertaModal={email:false,sms:false,whatsapp:false,d30:false,d7:false,d3:false,d1:false};
+function openAlertaModal(){
+    const car=cars[activeIdx],ent=entities.find(e=>e.id===activeEntityId)||entities[0];
+    const a=car.alerta;
+    const rows=['email','sms','whatsapp','d30','d7','d3','d1'];
+    const rowMap={email:'tr-email',sms:'tr-sms',whatsapp:'tr-whatsapp',d30:'tr-30',d7:'tr-7',d3:'tr-3',d1:'tr-1'};
+    rows.forEach(k=>{
+        const isCanal=['email','sms','whatsapp'].includes(k);
+        const val=a?(isCanal?a.canais[k]:a.prazos[k]):false;
+        alertaModal[k]=val;
+        document.getElementById(rowMap[k]).classList.toggle('on',val);
+        if(isCanal){const w=document.getElementById(k+'InputWrap');if(w)w.style.display=val?'block':'none';}
+    });
+    document.getElementById('alertaEmail').value=a?.email||ent.email||'';
+    document.getElementById('alertaSms').value=a?.sms||ent.phone||'';
+    document.getElementById('alertaWhatsapp').value=a?.whatsapp||ent.phone||'';
+    const h=document.getElementById('alertaEntityHint');
+    if(h){const hc=!!(ent.email||ent.phone);h.style.display=hc&&!a?'block':'none';h.innerHTML=`📇 Pré-preenchido com os contactos de <strong>${escapeHtml(ent.name)}</strong>.`;}
+    document.getElementById('btnDesligar').style.display=a?'block':'none';
+    validateAlertaModal();
+    renderProxVenc();
+    const sep=document.getElementById('proxVencSep');
+    if(sep) sep.style.display=car.vencimento?'block':'none';
+    document.getElementById('alertaOverlay').classList.add('open');
+}
+function closeAlertaModal(){document.getElementById('alertaOverlay').classList.remove('open');}
+function handleAlertaOverlayClick(e){if(e.target===document.getElementById('alertaOverlay'))closeAlertaModal();}
+function toggleAlertRow(row,key){
+    const isCanal=['email','sms','whatsapp'].includes(key);
+    alertaModal[key]=!alertaModal[key]; row.classList.toggle('on',alertaModal[key]);
+    if(isCanal){const w=document.getElementById(key+'InputWrap');if(w)w.style.display=alertaModal[key]?'block':'none';}
+    validateAlertaModal();
+}
+function validateAlertaModal(){const h=alertaModal.email||alertaModal.sms||alertaModal.whatsapp,p=alertaModal.d30||alertaModal.d7||alertaModal.d3||alertaModal.d1;document.getElementById('btnConfirmAlerta').disabled=!(h&&p);}
+function saveAlerta(){cars[activeIdx].alerta={canais:{email:alertaModal.email,sms:alertaModal.sms,whatsapp:alertaModal.whatsapp},prazos:{d30:alertaModal.d30,d7:alertaModal.d7,d3:alertaModal.d3,d1:alertaModal.d1},email:document.getElementById('alertaEmail').value.trim(),sms:document.getElementById('alertaSms').value.trim(),whatsapp:document.getElementById('alertaWhatsapp').value.trim()};saveAuto();closeAlertaModal();renderAlerta();}
+function disableAlerta(){cars[activeIdx].alerta=null;saveAuto();closeAlertaModal();renderAlerta();}
+
+const NIVEL_SCORE_AUTO={cinzento:0,laranja:0.2,'amarelo-claro':0.4,amarelo:0.6,verde:0.8,azul:1.0};
+function calcEntityScoreAuto(ent){const ramos=ent.ramos||{};const s=NIVEL_SCORE_AUTO[calcNivel(cars[0]||{})]||0;let t=0;['auto','lar','vida','saude','bike','pet'].forEach(r=>{t+=r==='auto'?s:(ramos[r]?1:0);});return Math.round((t/6)*100);}
+
+function renderEntityChip(){
+    const av=document.getElementById('entityChipAvatar');
+    const nm=document.getElementById('entityChipName');
+    let cs=document.getElementById('chipScore');
+    if(!cs){cs=document.createElement('span');cs.id='chipScore';cs.style.cssText='font-size:10px;font-weight:700;color:var(--muted);margin-left:2px;';nm.after(cs);}
+    if(selectedEntityIds.length===entities.length&&entities.length>1){
+        av.textContent='👨‍👩‍👧'; av.style.background='var(--accent)';
+        nm.textContent='Família'; cs.textContent='';
+    } else if(selectedEntityIds.length>1){
+        const first=entities.find(e=>e.id===selectedEntityIds[0]);
+        av.textContent=getInitials(first.name); av.style.background=first.color;
+        nm.textContent=first.name+' +'+(selectedEntityIds.length-1); cs.textContent='';
+    } else {
+        const ent=entities.find(e=>e.id===selectedEntityIds[0])||entities[0];
+        av.textContent=getInitials(ent.name); av.style.background=ent.color;
+        nm.textContent=ent.name;
+        const score=calcEntityScoreAuto(ent);
+        cs.textContent=score>0?score+'%':'';
+    }
+}
+
+function openEntitiesModal(){renderEntitiesList();document.getElementById('entitiesOverlay').classList.add('open');}
+function closeEntitiesModal(){document.getElementById('entitiesOverlay').classList.remove('open');}
+function handleEntitiesOverlayClick(e){if(e.target===document.getElementById('entitiesOverlay'))closeEntitiesModal();}
+
+function renderEntitiesList(){
+    const list=document.getElementById('entitiesList');list.innerHTML='';
+
+    // Botão "Toda a família"
+    if(entities.length>1){
+        const allSel=selectedEntityIds.length===entities.length;
+        const todosBtn=document.createElement('div');
+        todosBtn.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:14px;border:1.5px solid '+(allSel?'var(--accent)':'var(--border)')+';background:'+(allSel?'var(--accent-bg)':'var(--bg-card)')+';cursor:pointer;margin-bottom:6px;';
+        todosBtn.innerHTML=`<div style="display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px;">👨‍👩‍👧</div><div><div style="font-size:14px;font-weight:700;color:var(--text);">Toda a família</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${entities.length} pessoas</div></div></div><div style="width:22px;height:22px;border-radius:50%;border:1.5px solid ${allSel?'var(--accent)':'#D1D5DB'};background:${allSel?'var(--accent)':'white'};display:flex;align-items:center;justify-content:center;">${allSel?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>':''}</div>`;
+        todosBtn.onclick=()=>{
+            selectedEntityIds=allSel?[entities[0].id]:entities.map(e=>e.id);
+            activeEntityId=selectedEntityIds[0]; setActiveId(activeEntityId);
+            saveSelected(selectedEntityIds);
+            renderEntitiesList(); renderEntityChip(); renderForSelected();
+        };
+        list.appendChild(todosBtn);
+    }
+
+    entities.forEach(ent=>{
+        const isSel=selectedEntityIds.includes(ent.id);
+        const ativos=Object.values(ent.ramos||{}).filter(Boolean).length;
+        const relLabel=ent.relation&&RELATION_LABELS[ent.relation]?RELATION_LABELS[ent.relation]:'Sem relação';
+        const score=calcEntityScoreAuto(ent);
+        const row=document.createElement('div');
+        row.className='entity-row'+(isSel?' active':'');
+        row.innerHTML=`<div style="display:flex;align-items:center;gap:12px;width:100%;"><div class="entity-row-avatar" style="background:${ent.color};">${getInitials(ent.name)}</div><div class="entity-row-info"><div class="entity-row-name">${escapeHtml(ent.name)}</div><div class="entity-row-meta">${relLabel} · ${ativos} seguro${ativos===1?'':'s'} ativo${ativos===1?'':'s'}</div><div style="height:4px;background:var(--border);border-radius:99px;margin-top:6px;overflow:hidden;"><div style="height:100%;border-radius:99px;width:${score}%;background:var(--accent);transition:width 0.5s;"></div></div></div><div style="display:flex;align-items:center;gap:6px;flex-shrink:0;"><button class="entity-row-icon-btn" onclick="event.stopPropagation();openEntityFormModal('${ent.id}')" title="Editar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button><div style="width:22px;height:22px;border-radius:50%;border:1.5px solid ${isSel?'var(--accent)':'#D1D5DB'};background:${isSel?'var(--accent)':'white'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">${isSel?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>':''}</div></div></div>`;
+        row.onclick=()=>{
+            if(selectedEntityIds.includes(ent.id)){
+                if(selectedEntityIds.length>1) selectedEntityIds=selectedEntityIds.filter(id=>id!==ent.id);
+            } else {
+                selectedEntityIds=[...selectedEntityIds,ent.id];
+            }
+            activeEntityId=selectedEntityIds[0]; setActiveId(activeEntityId);
+            saveSelected(selectedEntityIds);
+            renderEntitiesList(); renderEntityChip(); renderForSelected();
+        };
+        list.appendChild(row);
+    });
+}
+
+function renderForSelected(){
+    // Mostra tabs de todos os carros das entidades selecionadas
+    const allCars=[];
+    selectedEntityIds.forEach(id=>{
+        const data=loadAutoForEntity(id);
+        (data.cars||[]).forEach(c=>allCars.push({...c,_entityId:id,_entityName:entities.find(e=>e.id===id)?.name}));
+    });
+    if(selectedEntityIds.length===1){
+        const data=loadAuto(); cars=data.cars; activeIdx=data.activeIdx;
+    } else {
+        cars=allCars; activeIdx=0;
+    }
+    closeEntitiesModal(); render();
+}
+
+function loadAutoForEntity(entityId){
+    try{const raw=localStorage.getItem('hubbu_auto_'+entityId);if(raw){const d=JSON.parse(raw);if(d&&Array.isArray(d.cars))return d;}}catch(e){}
+    return{cars:[newCarState('O meu carro','')],activeIdx:0};
+}
+
+function selectEntity(id){
+    selectedEntityIds=[id]; activeEntityId=id; setActiveId(id);
+    saveSelected(selectedEntityIds);
+    const data=loadAuto(); cars=data.cars; activeIdx=data.activeIdx;
+    closeEntitiesModal(); render();
+}
+
+function openEntityFormModal(id,openProfile=false){
+    editingEntityId=id||null;const isEdit=!!id;const ent=isEdit?entities.find(e=>e.id===id):null;
+    document.getElementById('entityFormTitle').textContent=isEdit?'Editar pessoa':'Adicionar familiar';
+    document.getElementById('inputEntityName').value=ent?.name||'';
+    document.getElementById('inputEntityEmail').value=ent?.email||'';
+    document.getElementById('inputEntityPhone').value=ent?.phone||'';
+    document.getElementById('inputEntityNif').value=ent?.nif||'';
+    document.getElementById('inputEntityDob').value=ent?.dob||'';
+    document.getElementById('inputEntityAddress').value=ent?.address||'';
+    document.getElementById('inputEntityPostal').value=ent?.postal||'';
+    formRelation=ent?.relation||null;
+    document.querySelectorAll('.relation-chip').forEach(c=>c.classList.toggle('selected',c.dataset.rel===formRelation));
+    formColor=ent?.color||pickNextColor();renderColorPicker();
+    const hasContacts=!!(ent?.email||ent?.phone);
+    document.getElementById('contactsBlock').classList.toggle('open',hasContacts);
+    document.getElementById('contactsToggle').classList.toggle('open',hasContacts);
+    const hasProfile=!!(ent?.nif||ent?.dob||ent?.address)||openProfile;
+    document.getElementById('profileBlock').classList.toggle('open',hasProfile);
+    document.getElementById('profileToggle').classList.toggle('open',hasProfile);
+    document.getElementById('btnDeleteEntity').style.display=(isEdit&&entities.length>1)?'flex':'none';
+    validateEntityForm();
+    document.getElementById('entityFormOverlay').classList.add('open');
+    setTimeout(()=>document.getElementById('inputEntityName').focus(),250);
+}
+function pickNextColor(){const used=entities.map(e=>e.color);return ENTITY_COLORS.find(c=>!used.includes(c))||ENTITY_COLORS[0];}
+function renderColorPicker(){const picker=document.getElementById('colorPicker');picker.innerHTML='';ENTITY_COLORS.forEach(c=>{const d=document.createElement('div');d.className='color-dot'+(c===formColor?' selected':'');d.style.background=c;d.onclick=()=>{formColor=c;renderColorPicker();};picker.appendChild(d);});}
+function selectRelation(el){const rel=el.dataset.rel;if(formRelation===rel){formRelation=null;el.classList.remove('selected');}else{formRelation=rel;document.querySelectorAll('.relation-chip').forEach(c=>c.classList.toggle('selected',c.dataset.rel===rel));}}
+function toggleContactsBlock(){document.getElementById('contactsBlock').classList.toggle('open');document.getElementById('contactsToggle').classList.toggle('open');}
+function toggleProfileBlock(){document.getElementById('profileBlock').classList.toggle('open');document.getElementById('profileToggle').classList.toggle('open');}
+function closeEntityFormModal(){document.getElementById('entityFormOverlay').classList.remove('open');}
+function handleEntityFormOverlayClick(e){if(e.target===document.getElementById('entityFormOverlay'))closeEntityFormModal();}
+function validateEntityForm(){document.getElementById('btnConfirmEntity').disabled=!document.getElementById('inputEntityName').value.trim();}
+function saveEntity(){
+    const name=document.getElementById('inputEntityName').value.trim();if(!name)return;
+    const d={name,relation:formRelation,color:formColor,email:document.getElementById('inputEntityEmail').value.trim(),phone:document.getElementById('inputEntityPhone').value.trim(),nif:document.getElementById('inputEntityNif').value.trim(),dob:document.getElementById('inputEntityDob').value,address:document.getElementById('inputEntityAddress').value.trim(),postal:document.getElementById('inputEntityPostal').value.trim()};
+    if(editingEntityId){Object.assign(entities.find(e=>e.id===editingEntityId),d);saveEntities();closeEntityFormModal();renderEntityChip();renderEntitiesList();}
+    else{const ne={...d,id:'e'+Date.now(),ramos:{auto:false,lar:false,vida:false,saude:false,bike:false,pet:false}};entities.push(ne);saveEntities();activeEntityId=ne.id;setActiveId(activeEntityId);const data=loadAuto();cars=data.cars;activeIdx=data.activeIdx;closeEntityFormModal();render();renderEntitiesList();}
+}
+let confirmCallback=null;
+function showConfirm(title,msg,onOk){document.getElementById('confirmTitle').textContent=title;document.getElementById('confirmMsg').textContent=msg;confirmCallback=onOk;document.getElementById('confirmOverlay').classList.add('open');}
+document.getElementById('confirmCancel').onclick=()=>{document.getElementById('confirmOverlay').classList.remove('open');confirmCallback=null;};
+document.getElementById('confirmOk').onclick=()=>{document.getElementById('confirmOverlay').classList.remove('open');if(confirmCallback){confirmCallback();confirmCallback=null;}};
+function deleteEntity(){
+    if(!editingEntityId||entities.length<=1)return;
+    const ent=entities.find(e=>e.id===editingEntityId);
+    showConfirm(`Remover ${ent.name}?`,`Os seguros desta pessoa serão apagados permanentemente.`,()=>{
+        try{localStorage.removeItem(AUTO_KEY(editingEntityId));}catch(e){}
+        entities=entities.filter(e=>e.id!==editingEntityId);saveEntities();
+        if(activeEntityId===editingEntityId){activeEntityId=entities[0].id;setActiveId(activeEntityId);const data=loadAuto();cars=data.cars;activeIdx=data.activeIdx;}
+        closeEntityFormModal();render();renderEntitiesList();
+    });
+}
+
+/* Init */
+// Inicializar gauge sem animação no primeiro render
+document.getElementById('gaugeArc').style.transition = 'none';
+render();
+// Ativar transições após primeiro render
+setTimeout(() => {
+    document.getElementById('gaugeArc').style.transition = '';
+}, 50);
+</script>
+
+
+</body></html>
