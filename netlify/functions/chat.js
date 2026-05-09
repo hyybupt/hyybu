@@ -1,13 +1,24 @@
 const https = require('https');
 
+const CORS_HEADERS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+};
+
 exports.handler = async function(event, context) {
+    // Responder ao preflight do browser
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 204, headers: CORS_HEADERS, body: '' };
+    }
+
     if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: 'Method Not Allowed' };
+        return { statusCode: 405, headers: CORS_HEADERS, body: 'Method Not Allowed' };
     }
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
-        return { statusCode: 500, body: JSON.stringify({ error: 'API key not configured' }) };
+        return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'API key not configured' }) };
     }
 
     try {
@@ -58,22 +69,21 @@ Usa no máximo 2 emojis por resposta.`;
         if (!data.content || !data.content[0]) {
             return {
                 statusCode: 500,
+                headers: CORS_HEADERS,
                 body: JSON.stringify({ error: 'Resposta inválida da API' })
             };
         }
 
         return {
             statusCode: 200,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: data.content[0].text })
         };
 
     } catch (error) {
         return {
             statusCode: 500,
+            headers: CORS_HEADERS,
             body: JSON.stringify({ error: 'Erro técnico: ' + error.message })
         };
     }
