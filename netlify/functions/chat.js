@@ -108,7 +108,7 @@ Após 4 a 6 mensagens trocadas na conversa, de forma natural e sem ser intrusivo
 Faz esta pergunta apenas uma vez por conversa e no momento certo — após ter ajudado o utilizador com algo concreto.`;
 
         const requestBody = JSON.stringify({
-            model: 'claude-sonnet-4-5',
+            model: 'claude-sonnet-5',
             max_tokens: 4000,
             system: systemPrompt,
             messages: messages
