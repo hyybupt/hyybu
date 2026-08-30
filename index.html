@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
+<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+<script defer data-domain="hyybu.pt" src="https://plausible.io/js/script.js"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- ── SEO BÁSICO ── -->
-    <title>Hyybu — Todos os teus seguros num só lugar</title>
-    <meta name="description" content="Hyybu organiza todos os seguros da tua família num só lugar. Auto, Lar, Vida, Saúde — vê o teu nível de proteção, recebe alertas de vencimento e gere tudo gratuitamente.">
+    <title>hyybu. — Todos os teus seguros num só lugar</title>
+    <meta name="description" content="hyybu. organiza todos os seguros da tua família num só lugar. Carrega a apólice e a app trata do resto — coberturas, vencimentos e alertas antes de cada prazo. Grátis, sempre.">
     <meta name="keywords" content="gestão de seguros, seguros família, app seguros portugal, alertas vencimento seguro, organizar seguros, seguro auto, seguro lar, seguro vida, seguro saúde, proteção familiar">
-    <meta name="author" content="Hyybu">
+    <meta name="author" content="hyybu.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://hyybu.pt/">
 
     <!-- ── OPEN GRAPH (Facebook, LinkedIn, WhatsApp) ── -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hyybu.pt/">
-    <meta property="og:title" content="Hyybu — Todos os teus seguros num só lugar">
-    <meta property="og:description" content="Organiza todos os seguros da tua família. Auto, Lar, Vida, Saúde — vê o teu nível de proteção e recebe alertas de vencimento. Grátis.">
+    <meta property="og:title" content="hyybu. — Todos os teus seguros num só lugar">
+    <meta property="og:description" content="Organiza todos os seguros da tua família. Carrega a apólice e a app trata do resto — coberturas, vencimentos e alertas antes de cada prazo. Grátis.">
     <meta property="og:image" content="https://hyybu.pt/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="pt_PT">
-    <meta property="og:site_name" content="Hyybu">
+    <meta property="og:site_name" content="hyybu.">
 
     <!-- ── TWITTER CARD ── -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://hyybu.pt/">
-    <meta name="twitter:title" content="Hyybu — Todos os teus seguros num só lugar">
-    <meta name="twitter:description" content="Organiza todos os seguros da tua família. Auto, Lar, Vida, Saúde — vê o teu nível de proteção e recebe alertas de vencimento. Grátis.">
+    <meta name="twitter:title" content="hyybu. — Todos os teus seguros num só lugar">
+    <meta name="twitter:description" content="Organiza todos os seguros da tua família. Carrega a apólice e a app trata do resto — coberturas, vencimentos e alertas antes de cada prazo. Grátis.">
     <meta name="twitter:image" content="https://hyybu.pt/og-image.png">
 
     <!-- ── SCHEMA.ORG (Google Rich Results) ── -->
@@ -35,11 +38,11 @@
     {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "Hyybu",
+        "name": "hyybu.",
         "description": "App portuguesa de gestão de seguros. Organiza todos os seguros da tua família num só lugar.",
         "url": "https://hyybu.pt",
         "applicationCategory": "FinanceApplication",
-        "operatingSystem": "Web, iOS, Android",
+        "operatingSystem": "Android",
         "offers": {
             "@type": "Offer",
             "price": "0",
@@ -48,7 +51,7 @@
         "inLanguage": "pt-PT",
         "author": {
             "@type": "Organization",
-            "name": "Hyybu",
+            "name": "hyybu.",
             "url": "https://hyybu.pt"
         }
     }
@@ -66,20 +69,21 @@
             -webkit-text-stroke: 0 !important;
             letter-spacing: -3px !important;
         }
-        .nav-logo .dot, .footer-brand-logo .dot,
+        .nav-logo .dot,
         .hero-logo .dot, .p-logo .dot {
             -webkit-text-stroke: 0 !important;
             color: var(--text) !important;
         }
+        .footer-brand-logo .dot { -webkit-text-stroke: 0 !important; }
         :root {
             --accent:    #1E6B8C;
             --accent-l:  #3A98BD;
             --accent-bg: #E8F4F9;
             --text:      #0D0D0D;
             --muted:     #6B7280;
-            --border:    #EAE6DF;
-            --bg:        #FDFBF7;
-            --bg-alt:    #F5F2EC;
+            --border:    #EFEFEF;
+            --bg:        #F8F8F8;
+            --bg-alt:    #F0F3F7;
             --white:     #FFFFFF;
             --green:     #00C96A;
             --orange:    #FF7A00;
@@ -94,7 +98,7 @@
         ::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; }
 
         /* ── NAV ── */
-        nav { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(253,251,247,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+        nav { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(248,248,248,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
         .nav-inner { max-width:1100px; margin:0 auto; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; }
         .nav-logo { font-family:'Outfit',sans-serif; font-weight:900; font-size:24px; letter-spacing:-3px; color:var(--accent); text-decoration:none; line-height:1; }
         .nav-logo .dot { color:var(--text); }
@@ -118,6 +122,8 @@
         .waitlist-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(30,107,140,0.1); }
         .waitlist-btn { background:var(--accent); color:white; border:none; border-radius:14px; padding:14px 24px; font-family:'Outfit',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s; white-space:nowrap; box-shadow:0 4px 16px rgba(30,107,140,0.3); }
         .waitlist-btn:hover { background:#155270; transform:translateY(-1px); box-shadow:0 6px 20px rgba(30,107,140,0.4); }
+        .waitlist-btn:disabled { opacity:0.65; cursor:default; transform:none !important; }
+        .waitlist-error { display:none; color:#EF4444; font-size:12px; font-weight:600; margin-top:8px; text-align:center; }
         .hero-note { font-size:12px; color:var(--muted); margin-top:14px; animation:fadeUp 0.6s ease 0.4s both; }
         .success-msg { display:none; background:var(--accent-bg); border:1px solid rgba(30,107,140,0.2); border-radius:14px; padding:16px 24px; font-size:14px; font-weight:600; color:var(--accent); text-align:center; max-width:480px; }
 
@@ -145,9 +151,16 @@
         .phone { width:260px; height:520px; border-radius:36px; overflow:hidden; box-shadow:0 0 0 8px #1A1A1A, 0 0 0 9px #222, 0 40px 80px rgba(0,0,0,0.2), 0 8px 32px rgba(30,107,140,0.1); background:var(--bg); display:flex; flex-direction:column; }
         .phone .p-header { flex-shrink:0; }
         .phone .p-content { flex:1; overflow:hidden; }
+        .push-banner { position:absolute; top:-14px; left:50%; transform:translateX(-50%); width:230px; background:rgba(255,255,255,0.97); backdrop-filter:blur(8px); border-radius:16px; box-shadow:0 12px 30px rgba(0,0,0,0.18); padding:10px 12px; display:flex; align-items:flex-start; gap:9px; z-index:5; animation:pushIn 0.6s ease 0.4s both; }
+        .push-banner-icon { width:26px; height:26px; border-radius:7px; background:var(--accent); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:13px; }
+        .push-banner-text { flex:1; min-width:0; }
+        .push-banner-title { font-size:11px; font-weight:800; color:var(--text); letter-spacing:-0.2px; display:flex; align-items:center; justify-content:space-between; }
+        .push-banner-body { font-size:10.5px; color:#4B5563; line-height:1.3; margin-top:1px; }
+        .push-banner-now { font-size:9px; color:var(--muted); font-weight:600; }
+        @keyframes pushIn { from { opacity:0; transform:translateX(-50%) translateY(-14px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
 
         /* ── PHONE INTERNALS ── */
-        .p-header { display:flex; justify-content:space-between; align-items:center; padding:22px 16px 13px; background:rgba(253,251,247,0.95); border-bottom:1px solid var(--border); }
+        .p-header { display:flex; justify-content:space-between; align-items:center; padding:22px 16px 13px; background:rgba(248,248,248,0.95); border-bottom:1px solid var(--border); }
         .p-logo { font-family:'Outfit',sans-serif; font-weight:900; font-size:20px; letter-spacing:-2px; color:var(--accent); }
         .p-logo .dot { color:var(--text); }
         .p-chip { display:flex; align-items:center; gap:5px; background:var(--bg-alt); border:1px solid var(--border); padding:3px 8px 3px 3px; border-radius:99px; }
@@ -211,6 +224,9 @@
         .cal-item { display:flex; align-items:center; gap:9px; padding:10px 11px; background:var(--white); border:1px solid var(--border); border-radius:10px; margin-bottom:6px; }
         .cal-item.urgent { background:#FFFBEB; border-color:#FBBF24; }
         .cal-item.overdue { background:#FFF5F5; border-color:#FCA5A5; }
+        .cal-item.verde { background:#EFFBF4; border-color:rgba(0,201,106,0.3); }
+        .cal-item.laranja { background:#FFF4E9; border-color:rgba(255,122,0,0.32); }
+        .cal-item.vermelho { background:#FFF5F5; border-color:#FCA5A5; }
         .cal-item-info { flex:1; }
         .cal-item-name { font-size:10px; font-weight:700; margin-bottom:1px; }
         .cal-item-meta { font-size:8px; color:var(--muted); }
@@ -254,7 +270,7 @@
         .footer-inner { max-width:1100px; margin:0 auto; }
         .footer-top { display:flex; flex-wrap:wrap; justify-content:space-between; gap:36px; padding-bottom:44px; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:28px; }
         .footer-brand-logo { font-family:'Outfit',sans-serif; font-weight:900; font-size:26px; letter-spacing:-3px; color:var(--accent); display:block; margin-bottom:10px; }
-        .footer-brand-logo .dot { color:white; }
+        .footer-brand-logo .dot { color:white !important; }
         .footer-brand p { font-size:13px; color:rgba(255,255,255,0.35); line-height:1.6; max-width:260px; }
         .footer-col h4 { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:rgba(255,255,255,0.25); margin-bottom:14px; }
         .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:9px; }
@@ -271,14 +287,24 @@
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(8px); }
         }
+        @keyframes sp { to { transform: rotate(360deg); } }
         .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.6s ease,transform 0.6s ease; }
         .reveal.visible { opacity:1; transform:translateY(0); }
         .reveal-phone { opacity:0; transform:translateY(32px) scale(0.96); transition:opacity 0.7s ease,transform 0.7s ease; }
         .reveal-phone.visible { opacity:1; transform:translateY(0) scale(1); }
 
+        .faq-item { border-bottom:1px solid var(--border); }
+        .faq-question { width:100%; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 4px; background:none; border:none; cursor:pointer; text-align:left; font-family:'Outfit',sans-serif; font-size:16px; font-weight:700; color:var(--text); }
+        .faq-icon { flex-shrink:0; width:24px; height:24px; border-radius:50%; background:var(--accent-bg); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700; transition:transform 0.25s ease; }
+        .faq-item.open .faq-icon { transform:rotate(45deg); }
+        .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.3s ease; }
+        .faq-item.open .faq-answer { max-height:200px; }
+        .faq-answer p { font-size:15px; color:var(--muted); line-height:1.65; padding:0 4px 20px; }
+
         /* ── RESPONSIVE ── */
         @media(max-width:768px) {
-            .nav-links { display:none; }
+            .nav-links { gap:0; }
+            .nav-links li:not(:last-child) { display:none; }
             .feature-row, .feature-row.reverse { flex-direction:column; gap:48px; margin-bottom:80px; }
             .feature-row-phone { width:100%; display:flex; justify-content:center; }
             .waitlist-form, .waitlist-form-big { flex-direction:column; }
@@ -295,24 +321,26 @@
         <ul class="nav-links">
             <li><a href="#funcionalidades">Funcionalidades</a></li>
             <li><a href="#privacidade">Privacidade</a></li>
-            <li><a href="#waitlist">Early Access</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <!-- Quando a app estiver publicada: trocar href="#waitlist" por link direto da Play Store, e "Entrar na lista" por "Obter a app" (ou badge oficial da loja) -->
             <li><a href="#waitlist" class="nav-cta">Entrar na lista</a></li>
-            <li><a href="#" onclick="openAppModal();return false;" style="background:#0D0D0D;color:white;padding:9px 20px;border-radius:99px;font-weight:700;font-size:13px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,0.15);">Abrir App →</a></li>
         </ul>
     </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-    <div class="hero-eyebrow">Em breve · Web &amp; App</div>
+    <div class="hero-eyebrow">Em breve · App</div>
     <div class="hero-logo">hyybu<span class="dot">.</span></div>
     <p class="hero-tagline">Todos os seguros da tua família,<br><strong>organizados. Protegidos. Simples.</strong></p>
     <div class="waitlist-form">
         <input type="email" class="waitlist-input" id="heroEmail" placeholder="o.teu@email.pt" />
-        <button class="waitlist-btn" onclick="joinWaitlist('heroEmail','heroSuccess','heroForm')">Quero acesso →</button>
+        <button class="waitlist-btn" id="heroBtn" onclick="joinWaitlist('heroEmail','heroSuccess','heroForm','heroBtn','heroError')">Entrar na lista →</button>
     </div>
-    <div class="success-msg" id="heroSuccess">🎉 Estás na lista! Vamos avisar quando abrirmos.</div>
+    <div class="waitlist-error" id="heroError"></div>
+    <div class="success-msg" id="heroSuccess">🎉 Estás na lista! Enviámos-te um email a confirmar.</div>
     <p class="hero-note">Sem spam. Só o aviso de lançamento.</p>
+    <a href="#faq" style="font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;margin-top:6px;display:inline-block;">Tens dúvidas? Consulta o FAQ →</a>
 
     <!-- SCROLL INDICATOR -->
     <div onclick="document.getElementById('problema').scrollIntoView({behavior:'smooth'})" style="position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;animation:bounce 2s infinite;">
@@ -326,7 +354,7 @@
     <div class="section-inner">
         <div class="section-eyebrow reveal">O problema</div>
         <h2 class="section-title reveal">Seguros são importantes.<br>Gerir é um pesadelo.</h2>
-        <p class="section-sub reveal">A maioria das pessoas não sabe quantos seguros tem, quando vencem ou se está bem protegida. O hyybu. resolve isso.</p>
+        <p class="section-sub reveal">A maioria das pessoas não sabe quantos seguros tem, quando vencem ou se está bem protegida. O <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span>. resolve isso.</p>
         <div class="problema-grid">
             <div class="problema-card reveal">
                 <div class="problema-icon">
@@ -380,16 +408,59 @@
         <h2 class="section-title reveal" style="text-align:center;max-width:600px;margin:0 auto 16px;">Tudo o que precisas,<br>num só lugar.</h2>
         <p class="section-sub reveal" style="text-align:center;margin:0 auto 80px;">Desenhado para ser simples. Construído para ser útil.</p>
 
+        <!-- FEATURE 0 — Upload IA -->
+        <div class="feature-row reveal">
+            <div class="feature-row-text">
+                <div class="section-eyebrow">Preenchimento automático</div>
+                <h3 class="section-title">Carrega a apólice.<br>Pronto.</h3>
+                <p class="section-sub">Tira uma foto ou carrega o PDF das condições particulares. O <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span>. lê o documento e preenche sozinha a marca, a matrícula, o vencimento e todas as coberturas — sem escreveres uma única linha.</p>
+                <div class="feature-bullets" style="margin-top:24px;">
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Aceita PDF ou foto — mesmo apólices digitalizadas</div>
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Carrega automaticamente as coberturas contratadas, seguradora a seguradora</div>
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Também podes selecionar manualmente as garantias — e assim ficas com uma noção clara do que falta cobrir</div>
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Deteta coberturas extra — bagagem, animais, pneu — que normalmente passam despercebidas</div>
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Nunca inventa: o que não está confirmado, pede-te para confirmares</div>
+                </div>
+            </div>
+            <div class="feature-row-phone reveal-phone">
+                <div class="phone">
+                    <div class="p-header">
+                        <div class="p-logo">hyybu<span class="dot">.</span></div>
+                        <div class="p-chip"><div class="p-avatar" style="background:var(--accent);">E</div><div class="p-chip-name">Eva</div></div>
+                    </div>
+                    <div style="padding:16px 14px;flex:1;overflow:hidden;">
+                        <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:14px;">Adicionar viatura</div>
+                        <div style="border:2px dashed var(--accent); border-radius:16px; padding:18px 14px; text-align:center; background:var(--accent-bg); margin-bottom:16px;">
+                            <div style="width:36px;height:36px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                            </div>
+                            <div style="font-size:10px;font-weight:800;color:var(--text);margin-bottom:3px;">condicoes_particulares.pdf</div>
+                            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;">
+                                <div style="width:11px;height:11px;border-radius:50%;border:2px solid rgba(30,107,140,0.2);border-top-color:var(--accent);animation:sp 0.8s linear infinite;"></div>
+                                <div style="font-size:9px;font-weight:700;color:var(--accent);">A analisar…</div>
+                            </div>
+                        </div>
+                        <div class="mvp-guarantee"><div class="mvp-g-dot" style="background:var(--green);box-shadow:0 0 4px rgba(0,201,106,0.4);"></div><div class="mvp-g-name">Responsabilidade Civil</div><div class="mvp-g-status" style="color:var(--green);">✓</div></div>
+                        <div class="mvp-guarantee"><div class="mvp-g-dot" style="background:var(--green);box-shadow:0 0 4px rgba(0,201,106,0.4);"></div><div class="mvp-g-name">Choque e Colisão</div><div class="mvp-g-status" style="color:var(--green);">✓</div></div>
+                        <div class="mvp-guarantee"><div class="mvp-g-dot" style="background:var(--green);box-shadow:0 0 4px rgba(0,201,106,0.4);"></div><div class="mvp-g-name">Quebra de Vidros</div><div class="mvp-g-status" style="color:var(--green);">✓</div></div>
+                        <div class="mvp-guarantee" style="opacity:0.4;"><div class="mvp-g-dot" style="background:#EFEFEF;"></div><div class="mvp-g-name" style="color:var(--muted);">Assistência em Viagem</div><div class="mvp-g-status" style="color:var(--muted);">···</div></div>
+                        <div style="margin-top:10px; background:#FFF8ED; border:1px solid rgba(255,180,60,0.3); border-radius:10px; padding:8px 10px; display:flex; align-items:center; gap:6px;">
+                            <span style="font-size:12px;">🧳</span><span style="font-size:8.5px;font-weight:700;color:#8A5A00;">Descoberta: cobertura de bagagem!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- FEATURE 1 — Dashboard -->
         <div class="feature-row reveal">
             <div class="feature-row-text">
                 <div class="section-eyebrow">Visão geral</div>
                 <h3 class="section-title">O teu painel<br>de proteção.</h3>
-                <p class="section-sub">Num relance vês o teu score de proteção, o próximo vencimento e todos os ramos. Tudo numa só página, sempre atualizado.</p>
+                <p class="section-sub">Num relance vês o próximo vencimento, o índice de garantias de cada carro e todos os ramos. Tudo numa só página, sempre atualizado.</p>
                 <div class="feature-bullets" style="margin-top:24px;">
-                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Score de proteção de 0 a 100% baseado nos ramos ativos</div>
                     <div class="feature-bullet"><div class="feature-bullet-dot"></div>Próximo vencimento em destaque com acesso ao calendário completo</div>
-                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>10 tipos de seguro pré-configurados + ramos personalizados</div>
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Seguros pré-configurados + ramos personalizados</div>
                     <div class="feature-bullet"><div class="feature-bullet-dot"></div>Drag & drop para reorganizar os cards como quiseres</div>
                 </div>
             </div>
@@ -397,13 +468,12 @@
                 <div class="phone">
                     <div class="p-header">
                         <div class="p-logo">hyybu<span class="dot">.</span></div>
-                        <div class="p-chip"><div class="p-avatar" style="background:#1E6B8C;">E</div><div class="p-chip-name">Eva · 65%</div><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+                        <div class="p-chip"><div class="p-avatar" style="background:#1E6B8C;">E</div><div class="p-chip-name">Eva</div><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
                     </div>
                     <div class="p-content">
                         <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:16px;">Boa tarde, Eva.</div>
-                        <div class="p-prot"><div class="p-prot-row"><div class="p-prot-level" style="color:var(--green);">🟢 Proteção Forte</div><div class="p-prot-pct" style="color:var(--green);">65%</div></div><div class="p-prot-track"><div class="p-prot-fill" style="width:65%;background:var(--green);"></div></div><div class="p-prot-sub">4 ramos ativos · Eva</div></div>
                         <div class="p-venc-row">
-                            <div class="p-venc-card"><div class="p-venc-label">Próximo Vencimento</div><div class="p-venc-value"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>O meu carro <span style="color:var(--muted);">61d</span></div></div>
+                            <div class="p-venc-card" style="background:#FFFBEB;border:1px solid #FBBF24;"><div class="p-venc-label">Próximo Vencimento</div><div class="p-venc-value"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>O meu carro <span style="color:#D97706;font-weight:800;">22d</span></div></div>
                             <div class="p-cal-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><div class="p-cal-text">Calendário<br>Vencimentos</div></div>
                         </div>
                         <div class="p-section">Os teus seguros</div>
@@ -427,17 +497,17 @@
                 <h3 class="section-title">Toda a família<br>protegida.</h3>
                 <p class="section-sub">Adiciona todos os membros da família. Vê os seguros de cada pessoa ou de todos ao mesmo tempo. Seleciona quem quiseres com um toque.</p>
                 <div class="feature-bullets" style="margin-top:24px;">
-                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Perfis individuais com cor, relação familiar e score</div>
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Perfis individuais com cor e relação familiar</div>
                     <div class="feature-bullet"><div class="feature-bullet-dot"></div>Seleciona uma pessoa, várias ou "Todos" de uma vez</div>
                     <div class="feature-bullet"><div class="feature-bullet-dot"></div>Define um administrador — o greeting é sempre personalizado</div>
-                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Score de proteção por pessoa e para toda a família</div>
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Todos os vencimentos e alertas da família no mesmo calendário</div>
                 </div>
             </div>
             <div class="feature-row-phone reveal-phone">
                 <div class="phone">
                     <div class="p-header">
                         <div class="p-logo">hyybu<span class="dot">.</span></div>
-                        <div class="p-chip"><div class="p-avatar" style="background:var(--accent);font-size:10px;">👥</div><div class="p-chip-name">Todos</div><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+                        <div class="p-chip"><div class="p-avatar" style="background:var(--accent);font-size:10px;">👥</div><div class="p-chip-name">Todos</div><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
                     </div>
                     <div style="padding:14px;flex:1;overflow:hidden;">
                         <div class="p-modal">
@@ -446,9 +516,9 @@
                             <div class="p-modal-sub">Gere os seguros de toda a família</div>
                             <div class="p-entity-row selected" style="margin-bottom:7px;"><div class="p-entity-avatar" style="background:var(--accent);font-size:13px;">👥</div><div class="p-entity-info"><div class="p-entity-name">Todos</div><div class="p-entity-meta">3 pessoas</div></div><div class="p-entity-check checked">✓</div></div>
                             <div style="height:1px;background:var(--border);margin-bottom:7px;"></div>
-                            <div class="p-entity-row selected"><div class="p-entity-avatar" style="background:#1E6B8C;">E</div><div class="p-entity-info"><div class="p-entity-name">Eva ⭐</div><div class="p-entity-meta">Administrador · 4 ramos</div><div class="p-score-bar"><div class="p-score-fill" style="width:65%;background:var(--green);"></div></div></div><div class="p-entity-check checked">✓</div></div>
-                            <div class="p-entity-row"><div class="p-entity-avatar" style="background:#7C3AED;">JT</div><div class="p-entity-info"><div class="p-entity-name">João Tolo</div><div class="p-entity-meta">Cônjuge · 2 ramos</div><div class="p-score-bar"><div class="p-score-fill" style="width:40%;background:var(--orange);"></div></div></div><div class="p-entity-check"></div></div>
-                            <div class="p-entity-row"><div class="p-entity-avatar" style="background:#059669;">MX</div><div class="p-entity-info"><div class="p-entity-name">Maria Xanfrada</div><div class="p-entity-meta">Filho/a · 1 ramo</div><div class="p-score-bar"><div class="p-score-fill" style="width:20%;background:var(--orange);"></div></div></div><div class="p-entity-check"></div></div>
+                            <div class="p-entity-row selected"><div class="p-entity-avatar" style="background:#1E6B8C;">E</div><div class="p-entity-info"><div class="p-entity-name">Eva ⭐</div><div class="p-entity-meta">Administrador · 4 ramos</div></div><div class="p-entity-check checked">✓</div></div>
+                            <div class="p-entity-row"><div class="p-entity-avatar" style="background:#7C3AED;">J</div><div class="p-entity-info"><div class="p-entity-name">João</div><div class="p-entity-meta">Cônjuge · 2 ramos</div></div><div class="p-entity-check"></div></div>
+                            <div class="p-entity-row"><div class="p-entity-avatar" style="background:#059669;">M</div><div class="p-entity-info"><div class="p-entity-name">Maria</div><div class="p-entity-meta">Filho/a · 1 ramo</div></div><div class="p-entity-check"></div></div>
                             <div class="p-add-family">+ Adicionar familiar</div>
                         </div>
                     </div>
@@ -508,7 +578,7 @@
                         <div class="mvp-guarantee"><div class="mvp-g-dot" style="background:var(--green);box-shadow:0 0 4px rgba(0,201,106,0.4);"></div><div class="mvp-g-name">Responsabilidade Civil</div><div class="mvp-g-status" style="color:var(--green);">✓</div></div>
                         <div class="mvp-guarantee"><div class="mvp-g-dot" style="background:var(--green);box-shadow:0 0 4px rgba(0,201,106,0.4);"></div><div class="mvp-g-name">Danos Próprios</div><div class="mvp-g-status" style="color:var(--green);">✓</div></div>
                         <div class="mvp-guarantee"><div class="mvp-g-dot" style="background:var(--green);box-shadow:0 0 4px rgba(0,201,106,0.4);"></div><div class="mvp-g-name">Assistência em Viagem</div><div class="mvp-g-status" style="color:var(--green);">✓</div></div>
-                        <div class="mvp-guarantee"><div class="mvp-g-dot" style="background:#EAE6DF;"></div><div class="mvp-g-name" style="color:var(--muted);">Proteção Jurídica</div><div class="mvp-g-status" style="color:var(--muted);">—</div></div>
+                        <div class="mvp-guarantee"><div class="mvp-g-dot" style="background:#EFEFEF;"></div><div class="mvp-g-name" style="color:var(--muted);">Proteção Jurídica</div><div class="mvp-g-status" style="color:var(--muted);">—</div></div>
                     </div>
                 </div>
             </div>
@@ -517,17 +587,25 @@
         <!-- FEATURE 4 — Calendário (invertido) -->
         <div class="feature-row reverse reveal">
             <div class="feature-row-text">
-                <div class="section-eyebrow">Calendário de vencimentos</div>
+                <div class="section-eyebrow">Calendário de prazos</div>
                 <h3 class="section-title">Nunca mais<br>esqueces um prazo.</h3>
-                <p class="section-sub">Todos os vencimentos da família ordenados por data. De um relance sabes o que está urgente, o que está a vencer e o que está em dia.</p>
+                <p class="section-sub">Não é só o seguro. IUC, IMI, inspeção, revisões e o que mais quiseres acompanhar — tudo da família, ordenado por data, num único calendário. E quando o prazo se aproxima, avisamos-te diretamente no telemóvel.</p>
                 <div class="feature-bullets" style="margin-top:24px;">
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Notificação no telemóvel antes de cada prazo — não precisas de abrir a app para saber</div>
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Vencimentos de seguro, IUC, IMI, Inspeção, Revisão e alertas personalizados</div>
                     <div class="feature-bullet"><div class="feature-bullet-dot"></div>Calendário unificado com todos os ramos e todas as pessoas</div>
-                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Código de cores: amarelo (urgente), vermelho (vencido), neutro (em dia)</div>
-                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Ícone de cada ramo para identificação imediata</div>
-                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Contagem regressiva em dias até ao vencimento</div>
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Código de cores conforme a urgência, para nada te escapar</div>
+                    <div class="feature-bullet"><div class="feature-bullet-dot"></div>Contagem regressiva em dias até ao prazo</div>
                 </div>
             </div>
-            <div class="feature-row-phone reveal-phone">
+            <div class="feature-row-phone reveal-phone" style="position:relative;">
+                <div class="push-banner">
+                    <div class="push-banner-icon">🔔</div>
+                    <div class="push-banner-text">
+                        <div class="push-banner-title"><span><span style="color:var(--accent);letter-spacing:-0.5px;">hyybu</span><span style="color:var(--text);">.</span></span><span class="push-banner-now">agora</span></div>
+                        <div class="push-banner-body">O seguro Auto de Eva vence em 5 dias.</div>
+                    </div>
+                </div>
                 <div class="phone">
                     <div class="p-header">
                         <div class="p-logo">hyybu<span class="dot">.</span></div>
@@ -535,28 +613,28 @@
                     </div>
                     <div class="p-content">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-                            <div><div style="font-size:13px;font-weight:800;letter-spacing:-0.3px;">Calendário</div><div style="font-size:9px;color:var(--muted);">Todos os vencimentos</div></div>
-                            <div style="font-size:9px;font-weight:700;color:var(--accent);">2025</div>
+                            <div><div style="font-size:13px;font-weight:800;letter-spacing:-0.3px;">Calendário</div><div style="font-size:9px;color:var(--muted);">Todos os prazos</div></div>
+                            <div style="font-size:9px;font-weight:700;color:var(--accent);">2026</div>
                         </div>
-                        <div class="cal-item urgent">
-                            <div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg></div>
-                            <div class="cal-item-info"><div class="cal-item-name">Auto · Eva</div><div class="cal-item-meta">15 Ago 2025</div></div>
-                            <div class="cal-item-days" style="color:#D97706;">61d</div>
+                        <div class="cal-item vermelho">
+                            <div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg></div>
+                            <div class="cal-item-info"><div class="cal-item-name">Auto · Eva</div><div class="cal-item-meta">26 Ago 2026</div></div>
+                            <div class="cal-item-days" style="color:#EF4444;">5d</div>
                         </div>
-                        <div class="cal-item">
-                            <div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5L12 4l8 7.5"/><path d="M5 10.5V19a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-8.5"/></svg></div>
-                            <div class="cal-item-info"><div class="cal-item-name">Lar · Eva</div><div class="cal-item-meta">01 Out 2025</div></div>
-                            <div class="cal-item-days" style="color:var(--muted);">108d</div>
+                        <div class="cal-item laranja">
+                            <div style="font-size:15px;line-height:1;">🧾</div>
+                            <div class="cal-item-info"><div class="cal-item-name">IUC · João</div><div class="cal-item-meta">02 Set 2026</div></div>
+                            <div class="cal-item-days" style="color:#FF7A00;">12d</div>
+                        </div>
+                        <div class="cal-item verde">
+                            <div style="font-size:15px;line-height:1;">🔧</div>
+                            <div class="cal-item-info"><div class="cal-item-name">Inspeção · Eva</div><div class="cal-item-meta">15 Set 2026</div></div>
+                            <div class="cal-item-days" style="color:#00C96A;">25d</div>
                         </div>
                         <div class="cal-item">
                             <div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 3 14.5 3 8.5a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 12.5-9 12.5z"/></svg></div>
-                            <div class="cal-item-info"><div class="cal-item-name">Vida · Eva</div><div class="cal-item-meta">15 Jan 2026</div></div>
-                            <div class="cal-item-days" style="color:var(--muted);">214d</div>
-                        </div>
-                        <div class="cal-item overdue">
-                            <div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg></div>
-                            <div class="cal-item-info"><div class="cal-item-name">Auto · Maria</div><div class="cal-item-meta">12 Abr 2025</div></div>
-                            <div class="cal-item-days" style="color:#EF4444;">Vencido</div>
+                            <div class="cal-item-info"><div class="cal-item-name">Vida · António</div><div class="cal-item-meta">15 Jan 2027</div></div>
+                            <div class="cal-item-days" style="color:var(--muted);">147d</div>
                         </div>
                     </div>
                 </div>
@@ -571,7 +649,7 @@
     <div class="section-inner">
         <div class="section-eyebrow reveal">Privacidade &amp; Segurança</div>
         <h2 class="section-title reveal">Os teus dados<br>ficam contigo.</h2>
-        <p class="section-sub reveal">Não somos uma seguradora. Não vendemos dados. Não temos servidores com a tua informação. O hyybu. funciona 100% no teu dispositivo.</p>
+        <p class="section-sub reveal">Não somos uma seguradora. Não vendemos dados. As tuas apólices ficam no teu dispositivo — a única exceção é a leitura da foto ou PDF, processada nos nossos servidores só para extrair os dados, sem nunca ficar guardada.</p>
         <div class="priv-grid">
             <div class="priv-card reveal">
                 <div class="priv-icon">
@@ -580,7 +658,7 @@
                     </svg>
                 </div>
                 <div class="priv-title">Local por defeito</div>
-                <div class="priv-text">Toda a informação é guardada no teu dispositivo. Sem cloud, sem partilha automática.</div>
+                <div class="priv-text">A informação da tua apólice fica guardada no teu dispositivo. A única exceção é o momento da leitura por IA — o documento é processado para extrair os dados e não fica guardado depois.</div>
             </div>
             <div class="priv-card reveal">
                 <div class="priv-icon">
@@ -603,13 +681,66 @@
             </div>
             <div class="priv-card reveal">
                 <div class="priv-icon">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5.73708 6.54391V18.9857C5.73708 19.7449 6.35257 20.3604 7.11182 20.3604H16.8893C17.6485 20.3604 18.264 19.7449 18.264 18.9857V6.54391M2.90906 6.54391H21.0909" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round"/>
-                        <path d="M8 6V4.41421C8 3.63317 8.63317 3 9.41421 3H14.5858C15.3668 3 16 3.63317 16 4.41421V6" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round"/>
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
                     </svg>
                 </div>
-                <div class="priv-title">Apaga quando quiseres</div>
-                <div class="priv-text">Tens controlo total. Remove todos os dados a qualquer momento, sem processos complicados.</div>
+                <div class="priv-title">Cópia de segurança quando precisares</div>
+                <div class="priv-text">Local não é frágil: exporta uma cópia protegida por password sempre que quiseres. Útil se perderes o telemóvel, trocares para um novo, ou quiseres partilhar os dados com alguém do teu agregado.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="section-inner">
+        <div class="section-eyebrow reveal" style="text-align:center;">Perguntas Frequentes</div>
+        <h2 class="section-title reveal" style="text-align:center;">Ainda com dúvidas?</h2>
+        <div class="faq-list" style="max-width:720px;margin:40px auto 0;">
+            <div class="faq-item reveal">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Os meus dados de seguro ficam guardados onde?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer"><p>Só no teu telemóvel. O <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span>. não tem uma base de dados central com a tua informação — tudo o que preenches ou carregas fica guardado localmente, no armazenamento do teu próprio dispositivo.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Se desinstalar a app ou trocar de telemóvel, perco tudo?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer"><p>Só se não tiveres feito uma cópia de segurança antes. Como os dados vivem no dispositivo, podes exportar uma cópia protegida por password sempre que quiseres, e importá-la depois no telemóvel novo.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>A <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span><span style="color:#0D0D0D;">.</span> vende ou partilha os meus dados com seguradoras?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer"><p>Não. Não vendemos nem partilhamos os teus dados com seguradoras ou terceiros, por isso não há nada a vender ou partilhar. O <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span>. é uma ferramenta pessoal de organização.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Como é que a app lê a minha apólice?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer"><p>Tiras uma foto ou carregas o PDF das condições particulares, e o documento é enviado de forma segura para ser lido e devolver os dados extraídos — marca, matrícula, vencimento, coberturas. O ficheiro não fica guardado depois de lido. Se preferires não carregar nada, podes sempre preencher tudo manualmente — e assim ficas logo com uma noção mais precisa do que tens (ou não tens) garantido.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Quanto custa usar o <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span><span style="color:#0D0D0D;">.</span>?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer"><p>A app será sempre gratuita. Quem entrar na lista de espera vai ter acesso antecipado assim que lançarmos.</p></div>
+            </div>
+            <div class="faq-item reveal">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    <span>Em que formatos está disponível a app?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer"><p>Para já, o lançamento passa por Android. A ideia é estender depois a iOS.</p></div>
             </div>
         </div>
     </div>
@@ -618,14 +749,15 @@
 <!-- WAITLIST -->
 <section id="waitlist" class="waitlist-section">
     <div class="section-inner">
-        <div class="section-eyebrow reveal" style="text-align:center;">Early Access</div>
+        <div class="section-eyebrow reveal" style="text-align:center;">Acesso Antecipado</div>
         <h2 class="section-title reveal" style="text-align:center;">Sê dos primeiros<br>a experimentar.</h2>
-        <p class="section-sub reveal" style="margin:0 auto 48px;text-align:center;">O hyybu. está em desenvolvimento final. Entra na lista de espera e recebe acesso assim que lançarmos.</p>
+        <p class="section-sub reveal" style="margin:0 auto 48px;text-align:center;">O <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span>. está em desenvolvimento final. Entra na lista de espera e recebe acesso assim que lançarmos.</p>
         <div class="waitlist-form-big reveal" id="mainForm">
             <input type="email" class="waitlist-input" id="mainEmail" placeholder="o.teu@email.pt" />
-            <button class="waitlist-btn" onclick="joinWaitlist('mainEmail','mainSuccess','mainForm')">Entrar na lista →</button>
+            <button class="waitlist-btn" id="mainBtn" onclick="joinWaitlist('mainEmail','mainSuccess','mainForm','mainBtn','mainError')">Entrar na lista →</button>
         </div>
-        <div class="success-msg" id="mainSuccess" style="margin:0 auto;max-width:520px;">🎉 Estás na lista! Vamos avisar quando abrirmos.</div>
+        <div class="waitlist-error" id="mainError"></div>
+        <div class="success-msg" id="mainSuccess" style="margin:0 auto;max-width:520px;">🎉 Estás na lista! Enviámos-te um email a confirmar.</div>
         <p class="reveal" style="text-align:center;font-size:12px;color:var(--muted);margin-top:18px;">Sem spam. Apenas o aviso de lançamento. Cancela a qualquer momento.</p>
     </div>
 </section>
@@ -639,7 +771,7 @@
             <div class="legal-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Sem publicidade</div>
             <div class="legal-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Made in Portugal 🇵🇹</div>
         </div>
-        <p style="font-size:12px;color:var(--muted);">hyybu. não é mediador de seguros. É uma ferramenta pessoal de organização.</p>
+        <p style="font-size:12px;color:var(--muted);"><span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span>. não é mediador de seguros. É uma ferramenta pessoal de organização.</p>
     </div>
 </div>
 
@@ -651,13 +783,13 @@
                 <span class="footer-brand-logo">hyybu<span class="dot">.</span></span>
                 <p>O hub de seguros da tua família. Organizado, protegido, simples. Desenvolvido em Portugal.</p>
             </div>
-            <div class="footer-col"><h4>Produto</h4><ul><li><a href="#funcionalidades">Funcionalidades</a></li><li><a href="#privacidade">Privacidade</a></li><li><a href="#waitlist">Early Access</a></li></ul></div>
-            <div class="footer-col"><h4>Legal</h4><ul><li><a href="#" onclick="openLegal('terms');return false;">Termos de Utilização</a></li><li><a href="#" onclick="openLegal('privacy');return false;">Política de Privacidade</a></li><li><a href="#" onclick="openLegal('consent');return false;">Consentimento</a></li></ul></div>
-            <div class="footer-col"><h4>Contacto</h4><ul><li><a href="mailto:hyybu@hyybu.pt">hyybu@hyybu.pt</a></li><li><a href="mailto:hyybu@hyybu.pt">hyybu@hyybu.pt</a></li></ul></div>
+            <div class="footer-col"><h4>Produto</h4><ul><li><a href="#funcionalidades">Funcionalidades</a></li><li><a href="#privacidade">Privacidade</a></li><li><a href="#faq">FAQ</a></li><li><a href="#waitlist">Acesso Antecipado</a></li></ul></div>
+            <div class="footer-col"><h4>Legal</h4><ul><li><a href="privacidade.html">Como Tratamos os Teus Dados</a></li><li><a href="#" onclick="openLegal('terms');return false;">Termos de Utilização</a></li><li><a href="#" onclick="openLegal('privacy');return false;">Política de Privacidade</a></li><li><a href="#" onclick="openLegal('consent');return false;">Consentimento</a></li></ul></div>
+            <div class="footer-col"><h4>Contacto</h4><ul><li><a href="mailto:hyybu@hyybu.pt">hyybu@hyybu.pt</a></li></ul></div>
         </div>
         <div class="footer-bottom">
             <div class="footer-copy">
-                © 2026 hyybu. — Todos os direitos reservados.<br>
+                © 2026 <span style="color:var(--accent-l);font-weight:700;letter-spacing:-0.5px;">hyybu</span><span style="color:white;">.</span> — Todos os direitos reservados.<br>
                 Marca registada no INPI · Lei nº 63/1985 · Diretiva 2006/115/CE · Convenção de Berna<br>
                 É expressamente proibida a reprodução, cópia ou engenharia reversa sem autorização expressa.
             </div>
@@ -667,50 +799,56 @@
 </footer>
 
 <script>
-function joinWaitlist(inputId, successId, formId) {
+function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+}
+
+function joinWaitlist(inputId, successId, formId, btnId, errorId) {
     const input = document.getElementById(inputId);
     const success = document.getElementById(successId);
+    const btn = document.getElementById(btnId);
+    const errorEl = document.getElementById(errorId);
     const email = input.value.trim();
+
+    if (errorEl) errorEl.style.display = 'none';
+
     if (!email || !email.includes('@')) {
         input.style.borderColor = '#EF4444';
         input.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.1)';
         setTimeout(() => { input.style.borderColor=''; input.style.boxShadow=''; }, 2000);
         return;
     }
-    // Guarda localmente
-    const emails = JSON.parse(localStorage.getItem('hyybu_waitlist') || '[]');
-    if (!emails.includes(email)) { emails.push(email); localStorage.setItem('hyybu_waitlist', JSON.stringify(emails)); }
-    // Envia email para hyybu@hyybu.pt
-    window.location.href = `mailto:hyybu@hyybu.pt?subject=Pedido de acesso Hyybu&body=Novo pedido de acesso:%0A%0AEmail: ${encodeURIComponent(email)}%0A%0AEnviado em: ${new Date().toLocaleString('pt-PT')}`;
-    const form = document.getElementById(formId);
-    if (form) form.style.display = 'none';
-    success.style.display = 'block';
-}
 
-// ── PASSWORD MODAL ──
-function openAppModal() {
-    document.getElementById('appModal').style.display = 'flex';
-    setTimeout(() => document.getElementById('appPassword').focus(), 300);
-}
-function closeAppModal() {
-    document.getElementById('appModal').style.display = 'none';
-    document.getElementById('appPassword').value = '';
-    document.getElementById('appPasswordError').style.display = 'none';
-}
-function checkPassword() {
-    const pass = document.getElementById('appPassword').value;
-    const err = document.getElementById('appPasswordError');
-    if (pass === '1234') {
-        closeAppModal();
-        window.location.href = 'hyybu-landing.html';
-    } else {
-        err.style.display = 'block';
-        document.getElementById('appPassword').style.borderColor = '#EF4444';
-        setTimeout(() => {
-            document.getElementById('appPassword').style.borderColor = '';
-            err.style.display = 'none';
-        }, 2000);
-    }
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'A entrar...';
+
+    fetch('/.netlify/functions/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('request-failed');
+        return res.json();
+    })
+    .then(() => {
+        if (window.plausible) window.plausible('Entrou na Lista de Espera');
+        const form = document.getElementById(formId);
+        if (form) form.style.display = 'none';
+        success.style.display = 'block';
+    })
+    .catch(() => {
+        btn.disabled = false;
+        btn.textContent = originalText;
+        if (errorEl) {
+            errorEl.textContent = 'Não foi possível concluir o registo. Tenta novamente, ou escreve-nos para hyybu@hyybu.pt.';
+            errorEl.style.display = 'block';
+        }
+    });
 }
 
 const observer = new IntersectionObserver((entries) => {
@@ -726,18 +864,18 @@ document.querySelectorAll('.reveal, .reveal-phone').forEach(el => observer.obser
 
 <!-- ══ MODAL LEGAL ══ -->
 <div id="legalModal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);" onclick="if(event.target===this)closeLegal()">
-    <div style="position:absolute;bottom:0;left:0;right:0;max-width:720px;margin:0 auto;background:#FDFBF7;border-radius:28px 28px 0 0;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.15);">
+    <div style="position:absolute;bottom:0;left:0;right:0;max-width:720px;margin:0 auto;background:#F7F9FB;border-radius:28px 28px 0 0;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,0.15);">
 
         <!-- Handle + Tabs -->
-        <div style="padding:16px 24px 0;background:#FDFBF7;border-bottom:1px solid #EAE6DF;flex-shrink:0;">
-            <div style="width:36px;height:4px;background:#EAE6DF;border-radius:99px;margin:0 auto 16px;"></div>
+        <div style="padding:16px 24px 0;background:#F7F9FB;border-bottom:1px solid #EFEFEF;flex-shrink:0;">
+            <div style="width:36px;height:4px;background:#EFEFEF;border-radius:99px;margin:0 auto 16px;"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
                 <div style="display:flex;gap:6px;">
                     <button onclick="showLegalTab('consent')" id="tab-consent" style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;padding:7px 14px;border-radius:99px;border:none;cursor:pointer;background:#1E6B8C;color:white;transition:all 0.2s;">Consentimento</button>
-                    <button onclick="showLegalTab('privacy')" id="tab-privacy" style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;padding:7px 14px;border-radius:99px;border:1px solid #EAE6DF;cursor:pointer;background:transparent;color:#6B7280;transition:all 0.2s;">Privacidade</button>
-                    <button onclick="showLegalTab('terms')" id="tab-terms" style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;padding:7px 14px;border-radius:99px;border:1px solid #EAE6DF;cursor:pointer;background:transparent;color:#6B7280;transition:all 0.2s;">Termos</button>
+                    <button onclick="showLegalTab('privacy')" id="tab-privacy" style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;padding:7px 14px;border-radius:99px;border:1px solid #EFEFEF;cursor:pointer;background:transparent;color:#6B7280;transition:all 0.2s;">Privacidade</button>
+                    <button onclick="showLegalTab('terms')" id="tab-terms" style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;padding:7px 14px;border-radius:99px;border:1px solid #EFEFEF;cursor:pointer;background:transparent;color:#6B7280;transition:all 0.2s;">Termos</button>
                 </div>
-                <button onclick="closeLegal()" style="width:32px;height:32px;border-radius:50%;border:1px solid #EAE6DF;background:transparent;cursor:pointer;font-size:16px;color:#9CA3AF;">×</button>
+                <button onclick="closeLegal()" style="width:32px;height:32px;border-radius:50%;border:1px solid #EFEFEF;background:transparent;cursor:pointer;font-size:16px;color:#6B7280;">×</button>
             </div>
         </div>
 
@@ -747,18 +885,18 @@ document.querySelectorAll('.reveal, .reveal-phone').forEach(el => observer.obser
             <!-- CONSENTIMENTO -->
             <div id="legal-consent">
                 <div style="font-size:22px;font-weight:900;letter-spacing:-0.5px;margin-bottom:8px;">Antes de começares</div>
-                <div style="font-size:14px;color:#6B7280;margin-bottom:24px;line-height:1.6;">O hyybu. guarda os teus dados no teu dispositivo para que possas gerir os teus seguros. Queremos ser transparentes sobre como funciona.</div>
+                <div style="font-size:14px;color:#6B7280;margin-bottom:24px;line-height:1.6;">O <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span>. guarda os teus dados no teu dispositivo para que possas gerir os teus seguros. Queremos ser transparentes sobre como funciona.</div>
 
                 <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px;">
-                    <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:#F5F2EC;border-radius:14px;">
+                    <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:#F0F3F7;border-radius:14px;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E6B8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                         <div><div style="font-size:13px;font-weight:700;margin-bottom:3px;">Os teus dados ficam no teu dispositivo</div><div style="font-size:12px;color:#6B7280;line-height:1.5;">Não enviamos os teus dados para servidores externos. Tudo fica guardado localmente.</div></div>
                     </div>
-                    <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:#F5F2EC;border-radius:14px;">
+                    <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:#F0F3F7;border-radius:14px;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E6B8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
                         <div><div style="font-size:13px;font-weight:700;margin-bottom:3px;">Sem publicidade, sem partilha</div><div style="font-size:12px;color:#6B7280;line-height:1.5;">Não vendemos nem partilhamos os teus dados com terceiros para fins comerciais.</div></div>
                     </div>
-                    <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:#F5F2EC;border-radius:14px;">
+                    <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:#F0F3F7;border-radius:14px;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E6B8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                         <div><div style="font-size:13px;font-weight:700;margin-bottom:3px;">Podes apagar tudo a qualquer momento</div><div style="font-size:12px;color:#6B7280;line-height:1.5;">Nas definições da app podes eliminar todos os dados guardados.</div></div>
                     </div>
@@ -769,15 +907,15 @@ document.querySelectorAll('.reveal, .reveal-phone').forEach(el => observer.obser
             <div id="legal-privacy" style="display:none;">
                 <div style="display:inline-block;background:#E8F4F9;color:#1E6B8C;font-size:10px;font-weight:700;padding:4px 12px;border-radius:99px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">RGPD Conforme</div>
                 <div style="font-size:22px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px;">Política de Privacidade</div>
-                <div style="font-size:12px;color:#9CA3AF;margin-bottom:20px;">Última atualização: Maio 2026 · Versão 1.0</div>
-                <div style="background:#E8F4F9;border-left:3px solid #1E6B8C;padding:14px 16px;border-radius:0 10px 10px 0;font-size:13px;color:#1E6B8C;line-height:1.6;margin-bottom:24px;">O hyybu. não recolhe nem transmite dados pessoais para servidores externos. Toda a informação é guardada localmente no teu dispositivo.</div>
+                <div style="font-size:12px;color:#6B7280;margin-bottom:20px;">Última atualização: Maio 2026 · Versão 1.0</div>
+                <div style="background:#E8F4F9;border-left:3px solid #1E6B8C;padding:14px 16px;border-radius:0 10px 10px 0;font-size:13px;color:#1E6B8C;line-height:1.6;margin-bottom:24px;">O <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span>. não recolhe nem transmite dados pessoais para servidores externos. Toda a informação é guardada localmente no teu dispositivo.</div>
 
                 <div style="display:flex;flex-direction:column;gap:20px;">
-                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9CA3AF;margin-bottom:8px;">1. Responsável pelo Tratamento</div><p style="font-size:13px;color:#374151;line-height:1.7;">hyybu. — Plataforma de Gestão de Seguros<br>Contacto: <strong>hyybu@hyybu.pt</strong><br>Nos termos do Regulamento (UE) 2016/679 (RGPD).</p></div>
-                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9CA3AF;margin-bottom:8px;">2. Dados Recolhidos</div><p style="font-size:13px;color:#374151;line-height:1.7;">A aplicação pode guardar localmente no teu dispositivo: nome e relação familiar das pessoas que adicionas, informação sobre coberturas de seguros, datas de vencimento de apólices, preferências de alertas, matrícula e marca de viaturas. Estes dados nunca são transmitidos para servidores externos.</p></div>
-                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9CA3AF;margin-bottom:8px;">3. Base Legal</div><p style="font-size:13px;color:#374151;line-height:1.7;">O tratamento baseia-se no <strong>consentimento explícito</strong> que prestas na primeira utilização da app, nos termos do Art. 6.º, n.º 1, al. a) do RGPD.</p></div>
-                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9CA3AF;margin-bottom:8px;">4. Os Teus Direitos (RGPD)</div><p style="font-size:13px;color:#374151;line-height:1.7;">Acesso, retificação, apagamento, portabilidade, oposição e retirada do consentimento a qualquer momento.<br>Para exerceres: <strong>hyybu@hyybu.pt</strong><br>Reclamações: <strong>CNPD</strong> — www.cnpd.pt</p></div>
-                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9CA3AF;margin-bottom:8px;">5. Retenção de Dados</div><p style="font-size:13px;color:#374151;line-height:1.7;">Os dados são mantidos enquanto a app estiver instalada ou até solicitares o apagamento nas Definições.</p></div>
+                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6B7280;margin-bottom:8px;">1. Responsável pelo Tratamento</div><p style="font-size:13px;color:#374151;line-height:1.7;">hyybu. — Plataforma de Gestão de Seguros<br>Contacto: <strong>hyybu@hyybu.pt</strong><br>Nos termos do Regulamento (UE) 2016/679 (RGPD).</p></div>
+                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6B7280;margin-bottom:8px;">2. Dados Recolhidos</div><p style="font-size:13px;color:#374151;line-height:1.7;">A aplicação pode guardar localmente no teu dispositivo: nome e relação familiar das pessoas que adicionas, informação sobre coberturas de seguros, datas de vencimento de apólices, preferências de alertas, matrícula e marca de viaturas. Estes dados nunca são transmitidos para servidores externos.</p></div>
+                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6B7280;margin-bottom:8px;">3. Base Legal</div><p style="font-size:13px;color:#374151;line-height:1.7;">O tratamento baseia-se no <strong>consentimento explícito</strong> que prestas na primeira utilização da app, nos termos do Art. 6.º, n.º 1, al. a) do RGPD.</p></div>
+                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6B7280;margin-bottom:8px;">4. Os Teus Direitos (RGPD)</div><p style="font-size:13px;color:#374151;line-height:1.7;">Acesso, retificação, apagamento, portabilidade, oposição e retirada do consentimento a qualquer momento.<br>Para exerceres: <strong>hyybu@hyybu.pt</strong><br>Reclamações: <strong>CNPD</strong> — www.cnpd.pt</p></div>
+                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6B7280;margin-bottom:8px;">5. Retenção de Dados</div><p style="font-size:13px;color:#374151;line-height:1.7;">Os dados são mantidos enquanto a app estiver instalada ou até solicitares o apagamento nas Definições.</p></div>
                 </div>
             </div>
 
@@ -785,15 +923,15 @@ document.querySelectorAll('.reveal, .reveal-phone').forEach(el => observer.obser
             <div id="legal-terms" style="display:none;">
                 <div style="display:inline-block;background:#E8F4F9;color:#1E6B8C;font-size:10px;font-weight:700;padding:4px 12px;border-radius:99px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Versão 1.0</div>
                 <div style="font-size:22px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px;">Termos de Utilização</div>
-                <div style="font-size:12px;color:#9CA3AF;margin-bottom:20px;">Última atualização: Maio 2026 · Aplicável a partir da instalação</div>
-                <div style="background:#E8F4F9;border-left:3px solid #1E6B8C;padding:14px 16px;border-radius:0 10px 10px 0;font-size:13px;color:#1E6B8C;line-height:1.6;margin-bottom:24px;">O hyybu. é uma ferramenta de organização pessoal de seguros. Não é uma seguradora, mediador, nem prestador de aconselhamento financeiro.</div>
+                <div style="font-size:12px;color:#6B7280;margin-bottom:20px;">Última atualização: Maio 2026 · Aplicável a partir da instalação</div>
+                <div style="background:#E8F4F9;border-left:3px solid #1E6B8C;padding:14px 16px;border-radius:0 10px 10px 0;font-size:13px;color:#1E6B8C;line-height:1.6;margin-bottom:24px;">O <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span>. é uma ferramenta de organização pessoal de seguros. Não é uma seguradora, mediador, nem prestador de aconselhamento financeiro.</div>
 
                 <div style="display:flex;flex-direction:column;gap:20px;">
-                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9CA3AF;margin-bottom:8px;">1. O Que É o hyybu.</div><p style="font-size:13px;color:#374151;line-height:1.7;">Uma aplicação de gestão pessoal de seguros que permite organizar coberturas, acompanhar vencimentos, receber alertas de renovação e gerir seguros de múltiplas pessoas do agregado familiar.</p></div>
-                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9CA3AF;margin-bottom:8px;">2. O Que o hyybu. NÃO É</div><p style="font-size:13px;color:#374151;line-height:1.7;">Não é uma seguradora nem emite apólices. Não é mediador de seguros registado na ASF. Não presta aconselhamento financeiro. A apólice original prevalece sempre sobre a informação na app.</p></div>
-                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9CA3AF;margin-bottom:8px;">3. Limitação de Responsabilidade</div><p style="font-size:13px;color:#374151;line-height:1.7;">O hyybu. não se responsabiliza por decisões tomadas com base na informação da app, erros de introdução pelo utilizador, ou perda de dados por reinstalação ou troca de dispositivo.</p></div>
-                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9CA3AF;margin-bottom:8px;">4. Propriedade Intelectual</div><p style="font-size:13px;color:#374151;line-height:1.7;">A marca hyybu., o design, o código e todos os elementos são propriedade exclusiva dos seus criadores. É proibida a reprodução ou cópia sem autorização expressa.</p></div>
-                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9CA3AF;margin-bottom:8px;">5. Lei Aplicável</div><p style="font-size:13px;color:#374151;line-height:1.7;">Estes termos regem-se pela lei portuguesa. Questões legais: <strong>hyybu@hyybu.pt</strong></p></div>
+                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6B7280;margin-bottom:8px;">1. O Que É o <span style="color:var(--accent);letter-spacing:-0.5px;">hyybu</span>.</div><p style="font-size:13px;color:#374151;line-height:1.7;">Uma aplicação de gestão pessoal de seguros que permite organizar coberturas, acompanhar vencimentos, receber alertas de renovação e gerir seguros de múltiplas pessoas do agregado familiar.</p></div>
+                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6B7280;margin-bottom:8px;">2. O Que o <span style="color:var(--accent);letter-spacing:-0.5px;">hyybu</span>. NÃO É</div><p style="font-size:13px;color:#374151;line-height:1.7;">Não é uma seguradora nem emite apólices. Não é mediador de seguros registado na ASF. Não presta aconselhamento financeiro. A apólice original prevalece sempre sobre a informação na app.</p></div>
+                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6B7280;margin-bottom:8px;">3. Limitação de Responsabilidade</div><p style="font-size:13px;color:#374151;line-height:1.7;">O <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span>. não se responsabiliza por decisões tomadas com base na informação da app, erros de introdução pelo utilizador, ou perda de dados por reinstalação ou troca de dispositivo.</p></div>
+                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6B7280;margin-bottom:8px;">4. Propriedade Intelectual</div><p style="font-size:13px;color:#374151;line-height:1.7;">A marca <span style="color:var(--accent);font-weight:700;letter-spacing:-0.5px;">hyybu</span>., o design, o código e todos os elementos são propriedade exclusiva dos seus criadores. É proibida a reprodução ou cópia sem autorização expressa.</p></div>
+                    <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6B7280;margin-bottom:8px;">5. Lei Aplicável</div><p style="font-size:13px;color:#374151;line-height:1.7;">Estes termos regem-se pela lei portuguesa. Questões legais: <strong>hyybu@hyybu.pt</strong></p></div>
                 </div>
             </div>
 
@@ -817,31 +955,16 @@ function showLegalTab(tab) {
         const btn = document.getElementById('tab-' + t);
         btn.style.background = t === tab ? '#1E6B8C' : 'transparent';
         btn.style.color = t === tab ? 'white' : '#6B7280';
-        btn.style.border = t === tab ? 'none' : '1px solid #EAE6DF';
+        btn.style.border = t === tab ? 'none' : '1px solid #EFEFEF';
     });
 }
 </script>
 
-<!-- ── MODAL PASSWORD APP ── -->
-<div id="appModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px;">
-    <div style="background:white;border-radius:24px;padding:32px 28px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-        <div style="text-align:center;margin-bottom:24px;">
-            <img src="hyybu-owl.png" alt="Hyybu" style="width:64px;height:64px;border-radius:50%;border:2px solid #E8F4F9;margin-bottom:12px;">
-            <div style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:900;letter-spacing:-0.5px;color:#0D0D0D;margin-bottom:6px;">Acesso restrito</div>
-            <div style="font-size:13px;color:#9CA3AF;line-height:1.5;">A app está em fase de testes.<br>Introduz a password de acesso.</div>
-        </div>
-        <input type="password" id="appPassword" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()" style="width:100%;font-family:'Outfit',sans-serif;font-size:15px;font-weight:500;color:#0D0D0D;background:#F8F8F8;border:1.5px solid #EFEFEF;border-radius:12px;padding:13px 16px;outline:none;margin-bottom:8px;transition:border-color 0.2s;">
-        <div id="appPasswordError" style="display:none;font-size:12px;color:#EF4444;font-weight:600;margin-bottom:12px;text-align:center;">Password incorreta. Tenta novamente.</div>
-        <button onclick="checkPassword()" style="width:100%;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:white;background:#1E6B8C;border:none;border-radius:12px;padding:14px;cursor:pointer;margin-bottom:10px;">Entrar →</button>
-        <button onclick="closeAppModal()" style="width:100%;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:#9CA3AF;background:transparent;border:1.5px solid #EFEFEF;border-radius:12px;padding:11px;cursor:pointer;">Cancelar</button>
-    </div>
-</div>
-
 <!-- BOTÃO CHAT FLUTUANTE -->
 <div style="position:fixed;bottom:28px;right:24px;z-index:9998;display:flex;flex-direction:column;align-items:flex-end;gap:10px;" id="chatFloating">
-    <div id="chatTooltip" style="background:#0D0D0D;color:white;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;padding:8px 14px;border-radius:99px;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;">Tens dúvidas? Fala com a Hyybu 🦉</div>
-    <button onclick="window.location.href='hyybu-chat.html'" onmouseenter="document.getElementById('chatTooltip').style.opacity='1'" onmouseleave="document.getElementById('chatTooltip').style.opacity='0'" style="width:58px;height:58px;border-radius:50%;background:#1E6B8C;border:none;box-shadow:0 4px 20px rgba(30,107,140,0.4);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.2s;" onmousedown="this.style.transform='scale(0.93)'" onmouseup="this.style.transform='scale(1)'">
-        <img src="hyybu-owl.png" alt="Chat Hyybu" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+    <div id="chatTooltip" style="background:#0D0D0D;color:white;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;padding:8px 14px;border-radius:99px;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;">Tens dúvidas? Fala com o Gufy</div>
+    <button onclick="window.location.href='hyybu-chat.html'" onmouseenter="document.getElementById('chatTooltip').style.opacity='1'" onmouseleave="document.getElementById('chatTooltip').style.opacity='0'" style="width:58px;height:58px;border-radius:50%;background:#1E6B8C;border:none;box-shadow:0 4px 20px rgba(30,107,140,0.4);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.2s;overflow:hidden;" onmousedown="this.style.transform='scale(0.93)'" onmouseup="this.style.transform='scale(1)'">
+        <img src="hyybu-owl.jpg" alt="Gufy" style="width:100%;height:100%;object-fit:cover;">
     </button>
 </div>
 

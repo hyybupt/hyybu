@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
+<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+<script defer data-domain="hyybu.pt" src="https://plausible.io/js/script.js"></script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Hyybu — Fala com a Hyybu</title>
@@ -11,7 +14,7 @@
         --accent-l: #3A98BD;
         --accent-bg:#E8F4F9;
         --text:     #0D0D0D;
-        --muted:    #9CA3AF;
+        --muted:    #6B7280;
         --border:   #EFEFEF;
         --bg:       #F8F8F8;
         --white:    #FFFFFF;
@@ -95,7 +98,7 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
     </button>
     <div class="hyybu-avatar">
-        <img src="hyybu-owl.png" alt="Hyybu">
+        <img src="hyybu-owl.jpg" alt="Hyybu">
     </div>
     <div class="hyybu-info">
         <div class="hyybu-name">hyybu<span class="dot">.</span></div>
@@ -107,7 +110,7 @@
 <div class="chat-area" id="chatArea">
     <div class="welcome-card">
         <div class="welcome-owl">
-            <img src="hyybu-owl.png" alt="Hyybu">
+            <img src="hyybu-owl.jpg" alt="Hyybu">
         </div>
         <div class="welcome-title">Olá! Sou a hyybu<span class="dot">.</span></div>
         <div class="welcome-sub">A tua especialista pessoal de seguros. Pergunta-me o que quiseres — estou aqui para ajudar!</div>
@@ -117,7 +120,7 @@
 <!-- TYPING -->
 <div class="typing" id="typing">
     <div class="typing-avatar">
-        <img src="hyybu-owl.png" alt="Hyybu">
+        <img src="hyybu-owl.jpg" alt="Hyybu">
     </div>
     <div class="typing-bubble">
         <div class="typing-dot"></div>
@@ -213,7 +216,7 @@ function addMessage(role, text) {
     const div = document.createElement('div');
     div.className = `msg ${role}`;
     div.innerHTML = role === 'hyybu'
-        ? `<div class="msg-avatar"><img src="hyybu-owl.png" alt="Hyybu"></div>
+        ? `<div class="msg-avatar"><img src="hyybu-owl.jpg" alt="Hyybu"></div>
            <div><div class="msg-bubble">${formatText(text)}</div><div class="msg-time">${now}</div></div>`
         : `<div><div class="msg-bubble">${escapeHtml(text)}</div><div class="msg-time">${now}</div></div>`;
     area.appendChild(div);
